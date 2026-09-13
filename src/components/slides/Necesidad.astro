@@ -1,0 +1,195 @@
+---
+import Slide from '../Slide.astro';
+---
+
+<Slide id="necesidad">
+  <h2 class="slide__title">La necesidad de fondo</h2>
+  <p class="slide__lead">No vendemos tecnología. Vendemos control sobre la operación.</p>
+
+  <div class="slide__body split">
+    <figure class="pyramid">
+      <svg viewBox="0 0 720 460" role="img" aria-labelledby="pyr-title pyr-desc">
+        <title id="pyr-title">Pirámide de necesidades del negocio</title>
+        <desc id="pyr-desc">
+          Tres niveles: subsistencia (operación continua y rentable), seguridad y control (estabilidad operativa y
+          previsibilidad financiera, donde actúa Kiwano) y crecimiento (escalar sin depender de personas).
+        </desc>
+        <g class="tier">
+          <polygon points="300,20 398,170 202,170"></polygon>
+          <text x="300" y="120" class="tier__name">Crecimiento</text>
+          <text x="300" y="144" class="tier__sub">Escalar sin depender</text>
+          <text x="300" y="160" class="tier__sub">de personas</text>
+        </g>
+        <g class="tier tier--focus">
+          <polygon points="193,184 407,184 491,314 109,314"></polygon>
+          <text x="300" y="240" class="tier__name tier__name--big">Seguridad y control</text>
+          <text x="300" y="268" class="tier__sub">Estabilidad operativa y</text>
+          <text x="300" y="288" class="tier__sub">previsibilidad financiera</text>
+        </g>
+        <g class="tier">
+          <polygon points="100,328 500,328 580,450 20,450"></polygon>
+          <text x="300" y="386" class="tier__name">Subsistencia</text>
+          <text x="300" y="412" class="tier__sub">Operación continua y rentable</text>
+        </g>
+        <g class="note">
+          <line x1="449" y1="249" x2="522" y2="249"></line>
+          <circle cx="449" cy="249" r="6"></circle>
+          <text x="532" y="254">Kiwano actúa aquí</text>
+        </g>
+      </svg>
+    </figure>
+
+    <div class="how">
+      <p class="how__intro">
+        La necesidad principal es <strong>protección</strong>: que la operación no dependa de que alguien esté
+        disponible para revisar cada caso. La secundaria es <strong>subsistencia</strong>: que el negocio siga
+        facturando sin interrupciones ni sobrecostos.
+      </p>
+
+      <dl class="how__list">
+        <div>
+          <dt>Cómo la satisface: haciendo</dt>
+          <dd>Automatiza el proceso, decide con los criterios del cliente y previene errores antes de que cuesten.</dd>
+        </div>
+        <div>
+          <dt>Cómo la satisface: teniendo</dt>
+          <dd>La plataforma y sus agentes quedan como una herramienta propia del negocio, disponible todo el día.</dd>
+        </div>
+      </dl>
+
+      <p class="how__frame">
+        Marco de referencia: jerarquía de Maslow (nivel de seguridad) y matriz de Max-Neef (protección y
+        subsistencia, satisfechas por los ejes hacer y tener).
+      </p>
+    </div>
+  </div>
+</Slide>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: center;
+  }
+
+  .pyramid svg {
+    width: 100%;
+    height: auto;
+    font-family: var(--font-body);
+  }
+
+  .tier polygon {
+    fill: var(--surface);
+    stroke: var(--deep);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+
+  .tier text {
+    text-anchor: middle;
+    fill: var(--fg);
+  }
+
+  .tier__name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 21px;
+    fill: var(--deep);
+  }
+
+  .tier__name--big {
+    font-size: 26px;
+  }
+
+  .tier__sub {
+    font-size: 14px;
+    fill: var(--muted);
+  }
+
+  .tier--focus polygon {
+    fill: var(--deep);
+    stroke: var(--neon);
+    stroke-width: 3;
+  }
+
+  .tier--focus .tier__name,
+  .tier--focus .tier__sub {
+    fill: var(--cream);
+  }
+
+  .note line {
+    stroke: var(--deep);
+    stroke-width: 1.5;
+    stroke-dasharray: 3 4;
+  }
+
+  .note circle {
+    fill: var(--neon);
+    stroke: var(--deep);
+    stroke-width: 2;
+  }
+
+  .note text {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 17px;
+    fill: var(--deep);
+  }
+
+  .how {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .how__intro {
+    font-size: var(--step-1);
+    line-height: 1.45;
+    text-wrap: pretty;
+  }
+
+  .how__intro strong {
+    color: var(--deep);
+  }
+
+  .how__list {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .how__list div {
+    padding: 0.9rem 1.1rem;
+    background: var(--surface);
+    border-radius: var(--radius-m);
+    border-left: 3px solid var(--deep);
+  }
+
+  .how__list dt {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-1);
+    color: var(--title);
+  }
+
+  .how__list dd {
+    margin-top: 0.25rem;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+
+  .how__frame {
+    font-size: var(--step--1);
+    color: var(--muted);
+    max-width: 52ch;
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 900px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+    .pyramid {
+      max-width: 520px;
+    }
+  }
+</style>

@@ -1,0 +1,123 @@
+---
+import '@fontsource-variable/fredoka/wght.css';
+import '@fontsource-variable/nunito-sans/wght.css';
+import '../styles/global.css';
+import Rail from '../components/Rail.astro';
+import { site } from '../data/deck';
+
+interface Props {
+  title?: string;
+}
+
+const { title = `${site.name} — ${site.claim}` } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={site.description} />
+    <meta name="theme-color" content="#121413" />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={site.description} />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <Rail />
+    <main>
+      <slot />
+    </main>
+
+    <script>
+      const slides = Array.from(document.querySelectorAll<HTMLElement>('.slide'));
+      const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.rail__link'));
+      const themed = Array.from(document.querySelectorAll<HTMLElement>('.rail, .controls'));
+      const counter = document.querySelector<HTMLElement>('.counter__current');
+      const progress = document.querySelector<HTMLElement>('.progress');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      let active = -1;
+      const ratios = new Map<Element, number>();
+
+      function setActive(index: number) {
+        if (index === active) return;
+        active = index;
+        const slide = slides[index];
+        links.forEach((link, i) => link.setAttribute('aria-current', i === index ? 'true' : 'false'));
+        themed.forEach((el) => (el.dataset.theme = slide.dataset.theme));
+        if (counter) counter.textContent = String(index + 1);
+        progress?.style.setProperty('--p', String((index + 1) / slides.length));
+        if (slide.id) history.replaceState(null, '', `#${slide.id}`);
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => ratios.set(e.target, e.intersectionRatio));
+          let best = 0;
+          let bestRatio = -1;
+          slides.forEach((s, i) => {
+            const r = ratios.get(s) ?? 0;
+            if (r > bestRatio) {
+              bestRatio = r;
+              best = i;
+            }
+          });
+          setActive(best);
+        },
+        { threshold: [0, 0.25, 0.5, 0.75, 1] },
+      );
+      slides.forEach((s) => observer.observe(s));
+
+      function go(index: number) {
+        const target = slides[Math.max(0, Math.min(slides.length - 1, index))];
+        target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      }
+
+      function toggleFullscreen() {
+        if (document.fullscreenElement) document.exitFullscreen();
+        else document.documentElement.requestFullscreen?.();
+      }
+
+      document.querySelector('[data-action="fullscreen"]')?.addEventListener('click', toggleFullscreen);
+      document.querySelector('[data-action="print"]')?.addEventListener('click', () => window.print());
+
+      // Navegación tipo presentador: flechas, espacio, inicio/fin y F para pantalla completa.
+      window.addEventListener('keydown', (e) => {
+        if (e.altKey || e.ctrlKey || e.metaKey) return;
+        const tag = (e.target as HTMLElement | null)?.tagName ?? '';
+        if (/^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(tag) && e.key === ' ') return;
+        switch (e.key) {
+          case 'ArrowDown':
+          case 'ArrowRight':
+          case 'PageDown':
+          case ' ':
+            e.preventDefault();
+            go(active + 1);
+            break;
+          case 'ArrowUp':
+          case 'ArrowLeft':
+          case 'PageUp':
+            e.preventDefault();
+            go(active - 1);
+            break;
+          case 'Home':
+            e.preventDefault();
+            go(0);
+            break;
+          case 'End':
+            e.preventDefault();
+            go(slides.length - 1);
+            break;
+          case 'f':
+          case 'F':
+            toggleFullscreen();
+            break;
+        }
+      });
+    </script>
+  </body>
+</html>

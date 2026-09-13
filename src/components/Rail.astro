@@ -1,0 +1,36 @@
+---
+import { slides } from '../data/deck';
+import Icon from './Icon.astro';
+---
+
+<nav class="rail" aria-label="Slides" data-theme="dark">
+  <ol class="rail__list">
+    {
+      slides.map((s, i) => (
+        <li class="rail__item">
+          <a class="rail__link" href={`#${s.id}`} aria-current={i === 0 ? 'true' : 'false'}>
+            <span class="visually-hidden">
+              {i + 1}. {s.label}
+            </span>
+          </a>
+          <span class="rail__label" aria-hidden="true">
+            <b>{i + 1}</b>
+            {s.label}
+          </span>
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<div class="progress" aria-hidden="true"></div>
+<p class="counter" aria-live="polite">
+  <span class="counter__current">1</span> / {slides.length}
+</p>
+
+<div class="controls" data-theme="dark">
+  <button class="controls__btn" type="button" data-action="fullscreen" title="Pantalla completa (F)">
+    <Icon name="maximize" size={16} />
+    Presentar
+  </button>
+</div>

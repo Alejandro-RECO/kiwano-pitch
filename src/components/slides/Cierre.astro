@@ -1,0 +1,131 @@
+---
+import { Image } from 'astro:assets';
+import Slide from '../Slide.astro';
+import Icon from '../Icon.astro';
+import logo from '../../assets/kiwano-logo.png';
+import { site } from '../../data/deck';
+
+const ctaHref = site.contactEmail
+  ? `mailto:${site.contactEmail}?subject=${encodeURIComponent('Diagnóstico con Kiwano')}`
+  : '#implementacion';
+---
+
+<Slide id="cierre" bare>
+  <div class="end">
+    <Image
+      class="end__logo"
+      src={logo}
+      alt={`${site.name}, ${site.tagline}`}
+      widths={[360, 600, 900]}
+      sizes="(max-width: 767px) 70vw, 420px"
+      loading="lazy"
+    />
+    <h2 class="end__claim">{site.claim}</h2>
+    <p class="end__text">
+      Kiwano es un motor de automatización expandible a cualquier industria: hoy logística; mañana finanzas, salud,
+      atención al cliente y más.
+    </p>
+
+    <div class="end__actions">
+      <a class="btn btn--primary" href={ctaHref}>Empecemos con un diagnóstico</a>
+      <button class="btn btn--ghost" type="button" data-action="print">
+        <Icon name="printer" size={16} />
+        Guardar como PDF
+      </button>
+    </div>
+
+    <p class="end__thanks">Gracias. ¿Preguntas?</p>
+  </div>
+</Slide>
+
+<style>
+  .end {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 0.9rem;
+    padding-block: clamp(1rem, 4vh, 2rem);
+  }
+
+  .end__logo {
+    width: min(70vw, 420px);
+    height: auto;
+    margin-bottom: clamp(0.75rem, 3vh, 1.75rem);
+    filter: drop-shadow(0 0 22px color-mix(in srgb, var(--neon) 24%, transparent));
+  }
+
+  .end__claim {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-5);
+    line-height: 1.05;
+    color: var(--title);
+    text-wrap: balance;
+    max-width: 20ch;
+  }
+
+  .end__text {
+    max-width: 58ch;
+    font-size: var(--step-1);
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+
+  .end__actions {
+    margin-top: clamp(1rem, 3vh, 1.75rem);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .btn {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.5rem;
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    border: 2px solid transparent;
+  }
+
+  .btn--primary {
+    background: var(--neon);
+    color: var(--ink);
+    border-color: var(--neon);
+    box-shadow: var(--glow);
+  }
+
+  .btn--primary:hover {
+    box-shadow: 0 0 28px color-mix(in srgb, var(--neon) 75%, transparent);
+  }
+
+  .btn--ghost {
+    background: transparent;
+    color: var(--fg);
+    border-color: var(--brown);
+  }
+
+  .btn--ghost:hover {
+    background: var(--brown);
+    color: var(--cream);
+  }
+
+  .end__thanks {
+    margin-top: clamp(1rem, 4vh, 2rem);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: var(--step-3);
+    color: var(--fg);
+  }
+
+  @media print {
+    .end__actions {
+      display: none;
+    }
+  }
+</style>

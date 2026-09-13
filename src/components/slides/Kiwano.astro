@@ -1,0 +1,155 @@
+---
+import Slide from '../Slide.astro';
+import Icon from '../Icon.astro';
+
+const capabilities = [
+  {
+    icon: 'scan-search',
+    title: 'Reconocimiento de patrones',
+    text: 'Aprende de los datos históricos para identificar comportamientos y anticipar resultados.',
+  },
+  {
+    icon: 'sliders',
+    title: 'Reglas de negocio',
+    text: 'Se configura con los criterios de cada empresa; el agente decide como lo haría tu equipo.',
+  },
+  {
+    icon: 'bot',
+    title: 'Agentes entrenables',
+    text: 'Se entrenan a la medida de cada proceso y mejoran con cada nuevo caso.',
+  },
+] as const;
+---
+
+<Slide id="kiwano">
+  <div class="split">
+    <div>
+      <h2 class="slide__title">¿Qué es Kiwano?</h2>
+      <p class="slide__lead">
+        Una plataforma que convierte tus procesos repetitivos en agentes de IA que trabajan según tus reglas de
+        negocio, deciden con tus criterios y funcionan <strong class="hot">24/7</strong>.
+      </p>
+
+      <ul class="slide__body caps">
+        {
+          capabilities.map((c) => (
+            <li class="cap">
+              <span class="disc">
+                <Icon name={c.icon} />
+              </span>
+              <div>
+                <h3>{c.title}</h3>
+                <p>{c.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <aside class="engine" aria-labelledby="engine-title">
+      <p class="engine__claim" id="engine-title">Un mismo motor, muchas industrias.</p>
+      <p class="engine__now">Hoy, logística. Después, finanzas, salud, atención al cliente y más.</p>
+      <ul class="engine__traits">
+        <li>Implementación ágil, por fases</li>
+        <li>Precio accesible frente a soluciones enterprise</li>
+        <li>Sin necesidad de un equipo técnico propio</li>
+      </ul>
+    </aside>
+  </div>
+</Slide>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.9fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: center;
+  }
+
+  .hot {
+    color: var(--neon);
+    font-weight: 700;
+    text-shadow: var(--glow);
+  }
+
+  .caps {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .cap {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .cap h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-2);
+    line-height: 1.15;
+    color: var(--title);
+  }
+
+  .cap p {
+    margin-top: 0.25rem;
+    color: var(--muted);
+    max-width: 48ch;
+    text-wrap: pretty;
+  }
+
+  .engine {
+    background: var(--deep);
+    color: var(--cream);
+    border-radius: var(--radius-l);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    display: grid;
+    gap: 1rem;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--neon) 30%, transparent);
+  }
+
+  .engine__claim {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-4);
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+
+  .engine__now {
+    color: color-mix(in srgb, var(--cream) 80%, var(--deep));
+    text-wrap: pretty;
+  }
+
+  .engine__traits {
+    margin-top: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid color-mix(in srgb, var(--cream) 25%, transparent);
+    display: grid;
+    gap: 0.5rem;
+    font-weight: 600;
+  }
+
+  .engine__traits li {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+  }
+
+  .engine__traits li::before {
+    content: '';
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--neon);
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 900px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

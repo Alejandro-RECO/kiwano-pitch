@@ -1,0 +1,33 @@
+---
+import { slides, site } from '../data/deck';
+
+interface Props {
+  id: string;
+  /** Slides de portada y cierre: sin cabecera de página. */
+  bare?: boolean;
+}
+
+const { id, bare = false } = Astro.props;
+const index = slides.findIndex((s) => s.id === id);
+if (index === -1) throw new Error(`Slide "${id}" no está registrada en src/data/deck.ts`);
+const meta = slides[index];
+---
+
+<section class="slide" id={id} data-theme={meta.theme} aria-label={meta.label}>
+  {
+    !bare && (
+      <>
+        <header class="slide__brand" aria-hidden="true">
+          <b>{site.name}</b> {site.tagline}
+        </header>
+        <span class="slide__page" aria-hidden="true">
+          {index + 1} / {slides.length}
+        </span>
+      </>
+    )
+  }
+  <div class="slide__inner">
+    <slot />
+  </div>
+  {meta.transition && <p class="thread">{meta.transition}</p>}
+</section>

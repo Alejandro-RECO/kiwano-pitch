@@ -1,0 +1,253 @@
+---
+import Slide from '../Slide.astro';
+import Icon from '../Icon.astro';
+---
+
+<Slide id="metodologia">
+  <h2 class="slide__title">Nota metodológica: p-medianas</h2>
+  <p class="slide__lead">
+    Evaluamos si la localización óptima de instalaciones era un requisito estructural del negocio. No lo es.
+  </p>
+
+  <div class="slide__body split">
+    <div class="reasoning">
+      <section class="point">
+        <h3>Qué resuelve el modelo</h3>
+        <p>
+          Elegir dónde ubicar <em>p</em> instalaciones para minimizar la distancia (o el costo de transporte) hacia
+          los puntos de demanda. Es decisivo cuando hay flujo físico entre origen y cliente: bodegas, centros de
+          distribución, sucursales.
+        </p>
+      </section>
+      <section class="point">
+        <h3>Por qué no aplica a Kiwano</h3>
+        <p>
+          El servicio es digital. Los agentes se despliegan en la nube y se integran de forma remota con los sistemas
+          del cliente (ERP, TMS). No existe una distancia física que optimizar entre Kiwano y quien lo usa.
+        </p>
+      </section>
+      <section class="point">
+        <h3>Su única aplicación posible</h3>
+        <p>
+          Marginal: orientar la ubicación de una oficina de soporte o consultoría en Bogotá si algún día se requiere
+          atención presencial. No condiciona el modelo de negocio.
+        </p>
+      </section>
+    </div>
+
+    <figure class="diagram">
+      <svg viewBox="0 0 560 290" role="img" aria-labelledby="pm-title pm-desc">
+        <title id="pm-title">Comparación entre el modelo de p-medianas y la entrega digital de Kiwano</title>
+        <desc id="pm-desc">
+          A la izquierda, instalaciones físicas conectadas a puntos de demanda por distancias. A la derecha, Kiwano en
+          la nube conectado a cada PYME por un canal digital sin distancia.
+        </desc>
+
+        <g class="panel">
+          <text x="20" y="28" class="panel__title">Modelo de p-medianas</text>
+          <text x="20" y="46" class="panel__sub">Minimiza la distancia física</text>
+          <g class="edges">
+            <line x1="40" y1="90" x2="90" y2="130"></line>
+            <line x1="60" y1="170" x2="90" y2="130"></line>
+            <line x1="120" y1="80" x2="90" y2="130"></line>
+            <line x1="140" y1="160" x2="90" y2="130"></line>
+            <line x1="230" y1="130" x2="190" y2="200"></line>
+            <line x1="210" y1="250" x2="190" y2="200"></line>
+            <line x1="160" y1="240" x2="190" y2="200"></line>
+            <line x1="110" y1="220" x2="190" y2="200"></line>
+          </g>
+          <g class="demand">
+            <circle cx="40" cy="90" r="4"></circle>
+            <circle cx="60" cy="170" r="4"></circle>
+            <circle cx="120" cy="80" r="4"></circle>
+            <circle cx="140" cy="160" r="4"></circle>
+            <circle cx="230" cy="130" r="4"></circle>
+            <circle cx="210" cy="250" r="4"></circle>
+            <circle cx="160" cy="240" r="4"></circle>
+            <circle cx="110" cy="220" r="4"></circle>
+          </g>
+          <g class="facility">
+            <rect x="82" y="122" width="16" height="16" rx="3"></rect>
+            <rect x="182" y="192" width="16" height="16" rx="3"></rect>
+          </g>
+          <text x="66" y="104" class="dist">d</text>
+          <text x="214" y="160" class="dist">d</text>
+          <text x="20" y="278" class="panel__foot">Bodegas, sucursales, centros de distribución</text>
+        </g>
+
+        <line x1="280" y1="20" x2="280" y2="280" class="divider"></line>
+
+        <g class="panel">
+          <text x="300" y="28" class="panel__title">Kiwano</text>
+          <text x="300" y="46" class="panel__sub">Entrega digital: la distancia no es una variable</text>
+          <g class="edges edges--digital">
+            <line x1="420" y1="118" x2="330" y2="230"></line>
+            <line x1="420" y1="118" x2="390" y2="236"></line>
+            <line x1="420" y1="118" x2="450" y2="236"></line>
+            <line x1="420" y1="118" x2="510" y2="230"></line>
+          </g>
+          <g class="cloud">
+            <rect x="358" y="74" width="124" height="44" rx="22"></rect>
+            <text x="420" y="102">agentes en la nube</text>
+          </g>
+          <g class="demand demand--client">
+            <circle cx="330" cy="230" r="5"></circle>
+            <circle cx="390" cy="236" r="5"></circle>
+            <circle cx="450" cy="236" r="5"></circle>
+            <circle cx="510" cy="230" r="5"></circle>
+          </g>
+          <text x="300" y="278" class="panel__foot">Integración remota con ERP y TMS del cliente</text>
+        </g>
+      </svg>
+
+      <figcaption class="verdict">
+        <span class="verdict__icon"><Icon name="circle-off" size={18} /></span>
+        <span>
+          <strong>Conclusión:</strong> se evaluó y se descartó como requisito. El análisis se concentra en las variables
+          que sí mueven el negocio: adopción, calidad de datos del cliente y retorno por proceso.
+        </span>
+      </figcaption>
+    </figure>
+  </div>
+</Slide>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+
+  .reasoning {
+    display: grid;
+    gap: 1.1rem;
+  }
+
+  .point {
+    padding-left: 1.1rem;
+    border-left: 2px solid var(--deep);
+  }
+
+  .point h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-2);
+    line-height: 1.15;
+    color: var(--title);
+  }
+
+  .point p {
+    margin-top: 0.3rem;
+    color: var(--muted);
+    max-width: 52ch;
+    text-wrap: pretty;
+  }
+
+  .point em {
+    font-style: italic;
+    font-weight: 700;
+    color: var(--deep);
+  }
+
+  .diagram {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .diagram svg {
+    width: 100%;
+    height: auto;
+    background: var(--surface);
+    border-radius: var(--radius-m);
+    font-family: var(--font-body);
+  }
+
+  .panel__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 17px;
+    fill: var(--title);
+  }
+
+  .panel__sub,
+  .panel__foot {
+    font-size: 12px;
+    fill: var(--muted);
+  }
+
+  .edges line {
+    stroke: var(--deep);
+    stroke-width: 1.3;
+    opacity: 0.7;
+  }
+
+  .edges--digital line {
+    stroke-dasharray: 4 4;
+    stroke: var(--brown);
+    opacity: 0.9;
+  }
+
+  .demand circle {
+    fill: var(--cream);
+    stroke: var(--deep);
+    stroke-width: 2;
+  }
+
+  .demand--client circle {
+    fill: var(--deep);
+  }
+
+  .facility rect {
+    fill: var(--deep);
+  }
+
+  .dist {
+    font-size: 12px;
+    font-style: italic;
+    fill: var(--deep);
+  }
+
+  .divider {
+    stroke: var(--line);
+    stroke-width: 1.5;
+  }
+
+  .cloud rect {
+    fill: var(--deep);
+    stroke: var(--neon);
+    stroke-width: 1.5;
+  }
+
+  .cloud text {
+    text-anchor: middle;
+    font-size: 13px;
+    font-weight: 700;
+    fill: var(--cream);
+  }
+
+  .verdict {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 0.9rem 1.1rem;
+    border-radius: var(--radius-m);
+    background: var(--deep);
+    color: var(--cream);
+    font-size: var(--step--1);
+    line-height: 1.45;
+    text-wrap: pretty;
+  }
+
+  .verdict__icon {
+    flex: none;
+    color: var(--neon);
+    margin-top: 0.1rem;
+  }
+
+  @media (max-width: 900px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

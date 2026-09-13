@@ -1,0 +1,94 @@
+---
+import Slide from '../Slide.astro';
+import Icon from '../Icon.astro';
+
+const problems = [
+  {
+    icon: 'clock',
+    title: 'Tareas repetitivas',
+    text: 'Captura de datos, clasificación de documentos y validaciones consumen horas de trabajo humano cada día.',
+  },
+  {
+    icon: 'users',
+    title: 'Decisiones lentas',
+    text: 'Cada caso espera la revisión de una persona y genera cuellos de botella en la operación.',
+  },
+  {
+    icon: 'trending-up',
+    title: 'Errores y costos',
+    text: 'El trabajo manual produce errores, retrabajo y costos que crecen con el volumen.',
+  },
+] as const;
+---
+
+<Slide id="problema">
+  <h2 class="slide__title">El problema</h2>
+  <p class="slide__lead">Las empresas pierden tiempo y dinero en tareas repetitivas y decisiones manuales.</p>
+
+  <ul class="slide__body problems">
+    {
+      problems.map((p) => (
+        <li class="problem">
+          <span class="disc">
+            <Icon name={p.icon} />
+          </span>
+          <h3>{p.title}</h3>
+          <p>{p.text}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="closing">
+    Mientras el volumen crece, el costo de operar así crece con él. Y la única forma de absorberlo es sumar personas.
+  </p>
+</Slide>
+
+<style>
+  .problems {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+  }
+
+  .problem {
+    border-top: 2px solid var(--deep);
+    padding-top: 1.25rem;
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+  }
+
+  .problem h3 {
+    margin-top: 0.4rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-3);
+    line-height: 1.1;
+    color: var(--title);
+  }
+
+  .problem p {
+    color: var(--muted);
+    max-width: 34ch;
+    text-wrap: pretty;
+  }
+
+  .closing {
+    margin-top: clamp(1.5rem, 4vh, 2.5rem);
+    padding: 1rem 1.25rem;
+    border-left: 3px solid var(--deep);
+    background: var(--surface);
+    border-radius: 0 var(--radius-s) var(--radius-s) 0;
+    max-width: 60ch;
+    font-weight: 600;
+    color: var(--deep);
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 767px) {
+    .problems {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

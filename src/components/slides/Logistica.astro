@@ -1,0 +1,124 @@
+---
+import Slide from '../Slide.astro';
+import Icon from '../Icon.astro';
+
+const cases = [
+  {
+    icon: 'file-text',
+    title: 'Procesar documentos',
+    text: 'Guías de despacho, facturas de transporte y órdenes de compra sin captura manual.',
+  },
+  {
+    icon: 'route',
+    title: 'Optimizar envíos',
+    text: 'Reconoce patrones de retrasos, costos y zonas para priorizar y recomendar rutas.',
+  },
+  {
+    icon: 'bell',
+    title: 'Gestionar excepciones',
+    text: 'Detecta un envío atrasado o un dato inconsistente y decide si escalar o reasignar.',
+  },
+  {
+    icon: 'headset',
+    title: 'Responder al cliente',
+    text: 'Contesta “¿dónde está mi pedido?” cruzando datos de varios sistemas al instante.',
+  },
+  {
+    icon: 'circle-check',
+    title: 'Conciliar',
+    text: 'Valida que lo facturado por los transportistas coincida con lo realmente entregado.',
+  },
+  {
+    icon: 'trending-up',
+    title: 'Escalar sin crecer',
+    text: 'La misma lógica se replica a más volumen o a nuevas áreas sin sumar personal.',
+  },
+] as const;
+---
+
+<Slide id="logistica">
+  <div class="heading">
+    <span class="disc disc--brown"><Icon name="truck" /></span>
+    <div>
+      <h2 class="slide__title">¿Para qué sirve? Un ejemplo en logística</h2>
+      <p class="slide__lead">Seis procesos que hoy dependen de personas y que un agente puede asumir con las reglas del cliente.</p>
+    </div>
+  </div>
+
+  <ul class="slide__body cases">
+    {
+      cases.map((c) => (
+        <li class="case">
+          <span class="disc">
+            <Icon name={c.icon} />
+          </span>
+          <div>
+            <h3>{c.title}</h3>
+            <p>{c.text}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</Slide>
+
+<style>
+  .heading {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+  }
+
+  .heading .disc {
+    margin-top: 0.35rem;
+  }
+
+  .heading > div {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .cases {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .case {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.25rem;
+    background: var(--surface);
+    border-radius: var(--radius-m);
+  }
+
+  .case h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-2);
+    line-height: 1.15;
+    color: var(--title);
+  }
+
+  .case p {
+    margin-top: 0.3rem;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 1000px) {
+    .cases {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .cases {
+      grid-template-columns: 1fr;
+    }
+    .heading {
+      flex-direction: column;
+    }
+  }
+</style>

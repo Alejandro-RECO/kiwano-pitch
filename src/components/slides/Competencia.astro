@@ -1,0 +1,169 @@
+---
+import Slide from '../Slide.astro';
+import Icon from '../Icon.astro';
+
+const groups = [
+  {
+    icon: 'building',
+    title: 'RPA + IA (directa)',
+    who: 'UiPath, Automation Anywhere, Microsoft Power Automate, Blue Prism.',
+    gap: 'Potentes, pero caros y complejos: pensados para grandes corporativos.',
+  },
+  {
+    icon: 'layers',
+    title: 'Agentes emergentes',
+    who: 'Plataformas low-code y no-code de agentes de IA.',
+    gap: 'En rápido crecimiento, pero aún genéricas y poco especializadas.',
+  },
+  {
+    icon: 'network',
+    title: 'Automatización vertical',
+    who: 'Soluciones especializadas en un solo nicho.',
+    gap: 'Muy enfocadas, pero difíciles de adaptar a otros procesos.',
+  },
+] as const;
+---
+
+<Slide id="competencia">
+  <h2 class="slide__title">¿Existe competencia?</h2>
+  <p class="slide__lead">Sí. Se agrupa en tres categorías, y ahí está la oportunidad de Kiwano.</p>
+
+  <ul class="slide__body groups">
+    {
+      groups.map((g) => (
+        <li class="group">
+          <div class="group__head">
+            <span class="disc disc--brown">
+              <Icon name={g.icon} />
+            </span>
+            <h3>{g.title}</h3>
+          </div>
+          <dl>
+            <dt>Quiénes son</dt>
+            <dd class="group__who">{g.who}</dd>
+            <dt>Su límite para una PYME</dt>
+            <dd>{g.gap}</dd>
+          </dl>
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="diff">
+    <span class="diff__icon"><Icon name="target" /></span>
+    <div>
+      <h3>Diferenciador de Kiwano</h3>
+      <p>
+        Implementación ágil, precio accesible y foco en PYMES del mercado latinoamericano: agentes a la medida, sin
+        necesidad de un gran equipo técnico.
+      </p>
+    </div>
+  </div>
+</Slide>
+
+<style>
+  .groups {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 2.5vw, 2rem);
+  }
+
+  .group {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+    padding-top: 1.25rem;
+    border-top: 2px solid var(--brown);
+  }
+
+  .group__head {
+    display: flex;
+    gap: 0.9rem;
+    align-items: center;
+  }
+
+  .group h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-2);
+    line-height: 1.1;
+    color: var(--title);
+    text-wrap: balance;
+  }
+
+  .group dl {
+    display: grid;
+    gap: 0.2rem 0;
+  }
+
+  .group dt {
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+
+  .group dd {
+    margin-bottom: 0.8rem;
+    color: var(--fg);
+    text-wrap: pretty;
+  }
+
+  .group dd:last-child {
+    margin-bottom: 0;
+  }
+
+  .group__who {
+    font-weight: 700;
+    color: var(--deep);
+  }
+
+  .diff {
+    margin-top: clamp(1.5rem, 4vh, 2.5rem);
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem) clamp(1.25rem, 3vw, 2rem);
+    background: var(--deep);
+    color: var(--cream);
+    border-radius: var(--radius-l);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--neon) 35%, transparent);
+  }
+
+  .diff__icon {
+    flex: none;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: color-mix(in srgb, var(--cream) 18%, var(--deep));
+    color: var(--neon);
+  }
+
+  .diff__icon svg {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+
+  .diff h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-3);
+    line-height: 1.1;
+  }
+
+  .diff p {
+    margin-top: 0.35rem;
+    max-width: 70ch;
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 900px) {
+    .groups {
+      grid-template-columns: 1fr;
+    }
+    .diff {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
