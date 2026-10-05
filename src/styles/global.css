@@ -5,7 +5,7 @@
 --------------------------------------------------------------------------- */
 :root {
   --brown: #8c7355; /* títulos de alto impacto, estructura */
-  --neon: #39ff14; /* atención: hilo, CTA, dato destacado */
+  --kiwi: #9dbf85; /* acento suave: hilo, CTA, dato destacado (pulpa de kiwi) */
   --deep: #1b4d3e; /* tarjetas, íconos, bordes, énfasis */
   --ink: #121413; /* texto principal / fondo oscuro */
   --cream: #f7f4ef; /* fondo claro / texto sobre oscuro */
@@ -32,7 +32,7 @@
   --radius-s: 0.5rem;
   --radius-m: 1rem;
   --radius-l: 1.5rem;
-  --glow: 0 0 18px color-mix(in srgb, var(--neon) 55%, transparent);
+  --glow: none;
 }
 
 /* Tema por slide: abre y cierra en oscuro; el contenido denso va en crema. */
@@ -43,7 +43,7 @@
   --surface: var(--ink-2);
   --line: var(--ink-3);
   --title: var(--brown);
-  --accent: var(--neon);
+  --accent: var(--kiwi);
   --accent-fg: var(--ink);
 }
 [data-theme='light'] {
@@ -126,7 +126,7 @@ a {
 }
 
 :focus-visible {
-  outline: 2px solid var(--neon);
+  outline: 2px solid var(--kiwi);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -161,6 +161,19 @@ a {
   max-width: var(--content-w);
   margin-inline: auto;
   align-self: center;
+}
+
+.slide__eyebrow {
+  display: inline-block;
+  margin-bottom: 0.6rem;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  font-size: var(--step--1);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .slide__title {
@@ -237,7 +250,7 @@ a {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--neon);
+  background: var(--accent);
   box-shadow: var(--glow);
 }
 
@@ -246,7 +259,7 @@ a {
   width: 2px;
   height: clamp(2rem, 6vh, 3.25rem);
   border-radius: 1px;
-  background: linear-gradient(var(--neon), transparent);
+  background: linear-gradient(var(--accent), transparent);
 }
 
 /* ---------------------------------------------------------------------------
@@ -301,7 +314,7 @@ a {
   left: 50%;
   width: 1px;
   transform: translateX(-50%);
-  background: color-mix(in srgb, var(--neon) 38%, transparent);
+  background: color-mix(in srgb, var(--kiwi) 38%, transparent);
 }
 
 .rail__item {
@@ -326,8 +339,8 @@ a {
 }
 
 .rail__link[aria-current='true'] {
-  background: var(--neon);
-  border-color: var(--neon);
+  background: var(--accent);
+  border-color: var(--accent);
   box-shadow: var(--glow);
 }
 
@@ -351,7 +364,7 @@ a {
 .rail__label b {
   font-family: var(--font-display);
   font-weight: 500;
-  color: var(--neon);
+  color: var(--kiwi);
   margin-right: 0.4rem;
 }
 
@@ -366,7 +379,7 @@ a {
   top: 0;
   height: 3px;
   z-index: 20;
-  background: color-mix(in srgb, var(--neon) 18%, transparent);
+  background: color-mix(in srgb, var(--kiwi) 18%, transparent);
   display: none;
 }
 
@@ -375,7 +388,7 @@ a {
   display: block;
   height: 100%;
   width: calc(var(--p, 0) * 100%);
-  background: var(--neon);
+  background: var(--accent);
   box-shadow: var(--glow);
   transition: width 240ms ease;
 }

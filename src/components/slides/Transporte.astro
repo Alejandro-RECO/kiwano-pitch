@@ -1,0 +1,232 @@
+---
+import Slide from '../Slide.astro';
+import { origenes, destinos, procesos, oferta, demanda, costo, metodos, penalFila, penalCol } from '../../data/transporte';
+import { cop } from '../../data/costos';
+
+const fmt = (n: number) => n.toLocaleString('es-CO');
+const vogel = metodos.find((m) => m.nombre === 'Vogel')!;
+
+const pasos = [
+  'Penalización: diferencia entre los dos costos más bajos de cada fila y columna.',
+  'Se asigna en la celda más barata de la mayor penalización.',
+  'Se repite hasta cubrir la capacidad y la demanda.',
+];
+---
+
+<Slide id="transporte">
+  <p class="slide__eyebrow">Modelo de transporte · Vogel</p>
+  <h2 class="slide__title">¿Qué proveedor atiende a cada cliente?</h2>
+  <p class="slide__lead">Cada mes, Kiwano reparte las transacciones de sus clientes entre 3 proveedores de IA, al menor costo.</p>
+
+  <div class="slide__body split">
+    <figure>
+      <table>
+        <caption>
+          (Costo por 1.000 transacciones, miles de pesos) Miles de transacciones asignadas · Penalización (capacidad o
+          demanda)
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            {
+              destinos.map((d, j) => (
+                <th scope="col">
+                  {d}
+                  <small>{procesos[j]}</small>
+                </th>
+              ))
+            }
+            <th scope="col" class="pen">Penalización (capacidad)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            origenes.map((o, i) => (
+              <tr>
+                <th scope="row">{o}</th>
+                {destinos.map((_, j) => (
+                  <td class:list={{ on: vogel.x[i][j] > 0 }}>
+                    <span class="c">({costo[i][j]})</span> {vogel.x[i][j] > 0 ? fmt(vogel.x[i][j]) : 'x'}
+                  </td>
+                ))}
+                <td class="pen">
+                  <b>{penalFila[i]}</b> ({fmt(oferta[i])})
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <th scope="row" class="pen">Penalización (demanda)</th>
+            {
+              demanda.map((d, j) => (
+                <td class="pen">
+                  <b>{penalCol[j]}</b> ({fmt(d)})
+                </td>
+              ))
+            }
+            <td class="pen"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </figure>
+
+    <div class="side">
+      <ol class="steps">
+        {pasos.map((p) => <li>{p}</li>)}
+      </ol>
+      <p class="total">
+        Costo total: <strong>{cop(vogel.total * 1000)}</strong>
+        <span>al mes, en IA para los 4 clientes</span>
+      </p>
+    </div>
+  </div>
+</Slide>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(240px, 0.7fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 5px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  caption {
+    caption-side: bottom;
+    padding-top: 0.6rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: left;
+  }
+
+  th {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-0);
+    color: var(--title);
+    text-align: center;
+  }
+
+  tbody th {
+    text-align: left;
+  }
+
+  thead th small {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  td {
+    height: 3.2rem;
+    border-radius: var(--radius-s);
+    background: var(--surface);
+    text-align: center;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-2);
+    color: var(--muted);
+  }
+
+  td.on {
+    background: var(--deep);
+    color: var(--cream);
+  }
+
+  .c {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+
+  td.on .c {
+    color: var(--kiwi);
+  }
+
+  .pen {
+    background: transparent;
+    font-size: var(--step-0);
+    color: var(--muted);
+  }
+
+  td.pen b {
+    color: var(--kiwi);
+  }
+
+  tfoot th.pen,
+  thead th.pen {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .side {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .steps {
+    display: grid;
+    gap: 0.8rem;
+    counter-reset: paso;
+  }
+
+  .steps li {
+    display: flex;
+    gap: 0.7rem;
+    align-items: baseline;
+    counter-increment: paso;
+    text-wrap: pretty;
+  }
+
+  .steps li::before {
+    content: counter(paso);
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--deep);
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .total {
+    display: grid;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: var(--step-2);
+  }
+
+  .total strong {
+    font-size: var(--step-4);
+    color: var(--kiwi);
+  }
+
+  .total span {
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+
+  @media (max-width: 900px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

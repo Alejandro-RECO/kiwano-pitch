@@ -6,27 +6,27 @@ const groups = [
   {
     icon: 'building',
     title: 'RPA + IA (directa)',
-    who: 'UiPath, Automation Anywhere, Microsoft Power Automate, Blue Prism.',
-    gap: 'Potentes, pero caros y complejos: pensados para grandes corporativos.',
+    who: 'UiPath, Automation Anywhere, Power Automate.',
+    gap: 'Caros y complejos para una pyme.',
   },
   {
     icon: 'layers',
     title: 'Agentes emergentes',
-    who: 'Plataformas low-code y no-code de agentes de IA.',
-    gap: 'En rápido crecimiento, pero aún genéricas y poco especializadas.',
+    who: 'Plataformas low-code de agentes.',
+    gap: 'Genéricas, poco especializadas.',
   },
   {
     icon: 'network',
-    title: 'Automatización vertical',
-    who: 'Soluciones especializadas en un solo nicho.',
-    gap: 'Muy enfocadas, pero difíciles de adaptar a otros procesos.',
+    title: 'Integradores locales',
+    who: 'Automaxia, IAC y Sophos (Chapinero).',
+    gap: 'Proyectos largos, cobro por proyecto.',
   },
 ] as const;
 ---
 
 <Slide id="competencia">
-  <h2 class="slide__title">¿Existe competencia?</h2>
-  <p class="slide__lead">Sí. Se agrupa en tres categorías, y ahí está la oportunidad de Kiwano.</p>
+  <h2 class="slide__title">Panorama competitivo</h2>
+  <p class="slide__lead">Existe, pero nadie atiende a la pyme logística en su propia bodega.</p>
 
   <ul class="slide__body groups">
     {
@@ -39,9 +39,9 @@ const groups = [
             <h3>{g.title}</h3>
           </div>
           <dl>
-            <dt>Quiénes son</dt>
+            <dt>Quiénes</dt>
             <dd class="group__who">{g.who}</dd>
-            <dt>Su límite para una PYME</dt>
+            <dt>Su límite</dt>
             <dd>{g.gap}</dd>
           </dl>
         </li>
@@ -54,8 +54,7 @@ const groups = [
     <div>
       <h3>Diferenciador de Kiwano</h3>
       <p>
-        Implementación ágil, precio accesible y foco en PYMES del mercado latinoamericano: agentes a la medida, sin
-        necesidad de un gran equipo técnico.
+        Implementación ágil, precio accesible y foco en pymes.
       </p>
     </div>
   </div>
@@ -125,7 +124,7 @@ const groups = [
     background: var(--deep);
     color: var(--cream);
     border-radius: var(--radius-l);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--neon) 35%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kiwi) 35%, transparent);
   }
 
   .diff__icon {
@@ -136,7 +135,7 @@ const groups = [
     display: grid;
     place-items: center;
     background: color-mix(in srgb, var(--cream) 18%, var(--deep));
-    color: var(--neon);
+    color: var(--kiwi);
   }
 
   .diff__icon svg {

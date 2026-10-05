@@ -5,30 +5,30 @@ const phases = [
   {
     id: 'fase-diagnostico',
     title: 'Diagnóstico',
-    text: 'Se identifican los procesos candidatos (alto volumen, reglas claras) y se priorizan por retorno.',
+    text: 'Elegir el proceso con más retorno.',
   },
   {
     title: 'Diseño del agente',
-    text: 'Entradas, salidas, criterios de decisión y puntos de supervisión; se mapean integraciones (ERP, TMS).',
+    text: 'Reglas y puntos de control.',
   },
   {
     title: 'Entrenamiento',
-    text: 'Se entrena con datos históricos y se cargan las reglas de negocio del cliente.',
+    text: 'Datos históricos del cliente.',
   },
   {
     title: 'Piloto',
-    text: 'Se corre en un proceso acotado midiendo tiempo ahorrado, precisión e intervención humana.',
+    text: 'Un proceso, resultados medibles.',
   },
   {
     title: 'Despliegue',
-    text: 'Se escala a producción, se monitorea con tableros y el agente se reentrena con nuevos casos.',
+    text: 'Escalar y mejorar con cada caso.',
   },
 ];
 ---
 
 <Slide id="implementacion">
   <h2 class="slide__title">¿Cómo se implementa?</h2>
-  <p class="slide__lead">Un proceso por fases, con supervisión humana y mejora continua.</p>
+  <p class="slide__lead">Cinco fases, con supervisión humana.</p>
 
   <ol class="slide__body phases">
     {
@@ -47,9 +47,6 @@ const phases = [
     }
   </ol>
 
-  <p class="guard">
-    En cada fase el equipo del cliente valida el resultado. El agente nunca decide sin un punto de control definido.
-  </p>
 </Slide>
 
 <style>
@@ -69,7 +66,7 @@ const phases = [
     left: 10%;
     right: 10%;
     height: 2px;
-    background: linear-gradient(90deg, var(--neon), var(--deep) 30%, var(--deep));
+    background: linear-gradient(90deg, var(--kiwi), var(--deep) 30%, var(--deep));
   }
 
   .phase {
@@ -98,7 +95,7 @@ const phases = [
   .phase:first-child .phase__num {
     box-shadow:
       0 0 0 6px var(--bg),
-      0 0 0 8px var(--neon),
+      0 0 0 8px var(--kiwi),
       var(--glow);
   }
 
@@ -119,16 +116,6 @@ const phases = [
     text-wrap: pretty;
   }
 
-  .guard {
-    margin-top: clamp(1.5rem, 4vh, 2.5rem);
-    padding: 1rem 1.25rem;
-    border-left: 3px solid var(--neon);
-    background: var(--surface);
-    border-radius: 0 var(--radius-s) var(--radius-s) 0;
-    max-width: 64ch;
-    font-weight: 600;
-    text-wrap: pretty;
-  }
 
   @media (max-width: 900px) {
     .phases {
@@ -144,7 +131,7 @@ const phases = [
       right: auto;
       width: 2px;
       height: auto;
-      background: linear-gradient(180deg, var(--neon), var(--deep) 30%, var(--deep));
+      background: linear-gradient(180deg, var(--kiwi), var(--deep) 30%, var(--deep));
     }
 
     .phase {

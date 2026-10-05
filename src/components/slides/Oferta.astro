@@ -1,0 +1,176 @@
+---
+import Slide from '../Slide.astro';
+import Icon from '../Icon.astro';
+import { costos, cop } from '../../data/costos';
+
+const diferencias = [
+  { icon: 'sliders', text: 'A la medida de cada empresa.' },
+  { icon: 'rocket', text: 'Listo en semanas, sin programadores.' },
+  { icon: 'shield-check', text: 'Supervisión humana en cada decisión.' },
+] as const;
+
+const precio = (n: number) => (n === 0 ? 'Gratis' : cop(n));
+---
+
+<Slide id="oferta">
+  <h2 class="slide__title">Producto y precio</h2>
+  <p class="slide__lead">Un agente cuesta menos de la mitad que un auxiliar y trabaja 24/7.</p>
+
+  <div class="slide__body split">
+    <section aria-labelledby="prod-t">
+      <h3 class="block__title" id="prod-t"><span class="tag">Producto</span> Qué lo hace distinto</h3>
+      <ul class="diffs">
+        {
+          diferencias.map((d) => (
+            <li>
+              <span class="disc">
+                <Icon name={d.icon} />
+              </span>
+              <p>{d.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="vs">
+        Auxiliar con salario mínimo: <b>{cop(costos.referencia.auxiliar)}</b> al mes.<br />Agente Kiwano:{' '}
+        <b class="hot">{cop(costos.precios.find((p) => p.plan === 'Agente')!.precio)}</b> al mes.
+      </p>
+    </section>
+
+    <section aria-labelledby="precio-t">
+      <h3 class="block__title" id="precio-t"><span class="tag">Precio</span> De la prueba al contrato</h3>
+      <ol class="plans">
+        {
+          costos.precios.map((p) => (
+            <li class:list={['plan', { 'plan--hot': 'destacado' in p }]}>
+              <h4>{p.plan}</h4>
+              <p class="plan__price">
+                {precio(p.precio)} <span>{p.precio > 0 && p.unidad}</span>
+              </p>
+              <p class="plan__inc">{p.incluye}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+  </div>
+</Slide>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+
+  .block__title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-3);
+    line-height: 1.1;
+    color: var(--title);
+    margin-bottom: 1.25rem;
+  }
+
+  .tag {
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    background: var(--deep);
+    color: var(--cream);
+  }
+
+  .diffs {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .diffs li {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .diffs p {
+    font-weight: 600;
+    text-wrap: pretty;
+  }
+
+  .vs {
+    margin-top: 1.4rem;
+    padding: 1rem 1.2rem;
+    border-left: 3px solid var(--kiwi);
+    background: var(--surface);
+    border-radius: 0 var(--radius-s) var(--radius-s) 0;
+    text-wrap: pretty;
+  }
+
+  .hot {
+    color: var(--kiwi);
+  }
+
+  .plans {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+
+  .plan {
+    display: grid;
+    gap: 0.25rem;
+    align-content: start;
+    padding: 1rem 1.1rem;
+    border-radius: var(--radius-m);
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+  }
+
+  .plan--hot {
+    border-color: var(--kiwi);
+    box-shadow: var(--glow);
+  }
+
+  .plan h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-1);
+    color: var(--title);
+  }
+
+  .plan__price {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-3);
+    line-height: 1.1;
+    color: var(--fg);
+  }
+
+  .plan__price span {
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .plan__inc {
+    font-size: var(--step--1);
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+
+
+  @media (max-width: 900px) {
+    .split,
+    .plans {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

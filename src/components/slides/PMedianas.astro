@@ -1,0 +1,251 @@
+---
+import Slide from '../Slide.astro';
+import mapaImg from '../../assets/mapa-bogota.webp';
+import { nodos, sede, proyectarMapa, pMedianas, totalDesdeSede, mapa } from '../../data/red';
+
+const { ancho: W, alto: H, p } = proyectarMapa(560);
+const km = (n: number) => n.toLocaleString('es-CO', { maximumFractionDigits: 1 });
+const barrio = (localidad: string) => localidad.split(' – ').at(-1)!;
+
+const p1 = pMedianas(1);
+const p2 = pMedianas(2);
+const escenarios = [
+  { nombre: 'Sede actual', total: totalDesdeSede, donde: barrio(sede.localidad) },
+  { nombre: 'p = 1', total: p1.total, donde: p1.sitios.map((s) => barrio(s.localidad)).join(' + ') },
+  { nombre: 'p = 2', total: p2.total, donde: p2.sitios.map((s) => barrio(s.localidad)).join(' + '), mejor: true },
+];
+const ahorro1 = Math.round((1 - p1.total / totalDesdeSede) * 100);
+
+/* Colores escritos en el propio SVG: el mapa se ve bien aunque la hoja de estilos llegue tarde. */
+const C = { deep: '#1b4d3e', brown: '#8c7355', ink: '#121413', cream: '#f7f4ef', kiwi: '#9dbf85' };
+const clientes = nodos.filter((n) => n.tipo === 'cliente');
+---
+
+<Slide id="pmedianas">
+  <p class="slide__eyebrow">Localización · p-medianas</p>
+  <h2 class="slide__title">¿Dónde ubicar el punto de atención?</h2>
+  <p class="slide__lead">El sitio que deja a los 11 clientes lo más cerca posible.</p>
+
+  <div class="slide__body split">
+    <figure class="map">
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="pm-t">
+        <title id="pm-t">
+          {`Solución de p-medianas con p = 2: cada cliente se une a su punto de atención más cercano, en ${escenarios[2].donde}`}
+        </title>
+        <image href={mapaImg.src} x="0" y="0" width={W} height={H} preserveAspectRatio="none" />
+        {
+          p2.asignacion.map((a) => (
+            <line
+              x1={p(a.cliente).x}
+              y1={p(a.cliente).y}
+              x2={p(a.sitio).x}
+              y2={p(a.sitio).y}
+              stroke={C.deep}
+              stroke-width="2"
+              opacity="0.7"
+            />
+          ))
+        }
+        {
+          clientes.map((c) => (
+            <circle cx={p(c).x} cy={p(c).y} r="6.5" fill={C.deep} stroke={C.cream} stroke-width="2">
+              <title>{c.nombre}</title>
+            </circle>
+          ))
+        }
+        {
+          p2.sitios.map((s, k) => (
+            <g>
+              <rect
+                x={p(s).x - 11}
+                y={p(s).y - 11}
+                width="22"
+                height="22"
+                rx="4"
+                fill={C.brown}
+                stroke={C.cream}
+                stroke-width="2.5"
+                transform={`rotate(45 ${p(s).x} ${p(s).y})`}
+              />
+              <text
+                x={p(s).x}
+                y={p(s).y + 4.5}
+                text-anchor="middle"
+                font-size="12"
+                font-weight="700"
+                fill={C.cream}
+                font-family="Nunito Sans Variable, sans-serif"
+              >
+                {k + 1}
+              </text>
+              <text
+                x={p(s).x}
+                y={p(s).y - 20}
+                text-anchor="middle"
+                font-size="12"
+                font-weight="800"
+                fill={C.ink}
+                stroke={C.cream}
+                stroke-width="3.5"
+                paint-order="stroke"
+                font-family="Nunito Sans Variable, sans-serif"
+              >
+                {barrio(s.localidad)}
+              </text>
+            </g>
+          ))
+        }
+        <circle cx={p(sede).x} cy={p(sede).y} r="12" fill={C.ink} stroke={C.kiwi} stroke-width="3" />
+        <text
+          x={p(sede).x}
+          y={p(sede).y + 4.5}
+          text-anchor="middle"
+          font-size="13"
+          font-weight="700"
+          fill={C.cream}
+          font-family="Nunito Sans Variable, sans-serif">K</text
+        >
+        <text
+          x={p(sede).x}
+          y={p(sede).y - 18}
+          text-anchor="middle"
+          font-size="12"
+          font-weight="800"
+          fill={C.ink}
+          stroke={C.cream}
+          stroke-width="3.5"
+          paint-order="stroke"
+          font-family="Nunito Sans Variable, sans-serif"
+        >
+          Sede actual
+        </text>
+      </svg>
+      <figcaption>{mapa.atribucion}</figcaption>
+    </figure>
+
+    <div class="side">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Escenario</th>
+            <th scope="col">Suma de distancias</th>
+            <th scope="col">Ubicación</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            escenarios.map((e) => (
+              <tr class:list={{ best: e.mejor }}>
+                <th scope="row">{e.nombre}</th>
+                <td>
+                  <b>{km(e.total)} km</b>
+                </td>
+                <td>{e.donde}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+
+      <p class="win">
+        Un punto en {escenarios[1].donde} reduce los recorridos un <strong>{ahorro1} %</strong> frente a la sede.
+      </p>
+      <p class="note">Candidatos: los 21 nodos. Solución exacta por enumeración.</p>
+    </div>
+  </div>
+</Slide>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    align-items: center;
+  }
+
+  .map {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .map svg {
+    width: 100%;
+    height: auto;
+    max-height: 60vh;
+    background: var(--cream);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+  }
+
+  .map figcaption {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  .side {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  thead th {
+    text-align: left;
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--muted);
+    padding: 0 0.6rem 0.4rem 0;
+    border-bottom: 2px solid var(--deep);
+  }
+
+  tbody th,
+  td {
+    padding: 0.55rem 0.6rem 0.55rem 0;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+  }
+
+  tbody th {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--title);
+  }
+
+  tr.best th,
+  tr.best td {
+    color: var(--deep);
+    font-weight: 700;
+  }
+
+  tr.best b {
+    font-size: var(--step-1);
+  }
+
+  .win {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: var(--step-2);
+    line-height: 1.25;
+    text-wrap: pretty;
+  }
+
+  .win strong {
+    color: var(--deep);
+  }
+
+  .note {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 900px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

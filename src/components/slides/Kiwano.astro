@@ -6,28 +6,35 @@ const capabilities = [
   {
     icon: 'scan-search',
     title: 'Reconocimiento de patrones',
-    text: 'Aprende de los datos históricos para identificar comportamientos y anticipar resultados.',
+    text: 'Aprende de los datos históricos.',
   },
   {
     icon: 'sliders',
     title: 'Reglas de negocio',
-    text: 'Se configura con los criterios de cada empresa; el agente decide como lo haría tu equipo.',
+    text: 'Decide con los criterios de cada empresa.',
   },
   {
     icon: 'bot',
     title: 'Agentes entrenables',
-    text: 'Se entrenan a la medida de cada proceso y mejoran con cada nuevo caso.',
+    text: 'Mejora con cada caso nuevo.',
   },
+] as const;
+
+const uses = [
+  { title: 'Documentos', text: 'guías y facturas sin digitar' },
+  { title: 'Envíos', text: 'rutas recomendadas' },
+  { title: 'Excepciones', text: 'detecta retrasos y escala' },
+  { title: 'Clientes', text: '“¿dónde está mi pedido?”' },
+  { title: 'Conciliación', text: 'facturado contra entregado' },
 ] as const;
 ---
 
 <Slide id="kiwano">
   <div class="split">
     <div>
-      <h2 class="slide__title">¿Qué es Kiwano?</h2>
+      <h2 class="slide__title">La solución: Kiwano</h2>
       <p class="slide__lead">
-        Una plataforma que convierte tus procesos repetitivos en agentes de IA que trabajan según tus reglas de
-        negocio, deciden con tus criterios y funcionan <strong class="hot">24/7</strong>.
+        Agentes de IA que asumen los procesos repetitivos de una pyme, con sus reglas y <strong class="hot">24/7</strong>.
       </p>
 
       <ul class="slide__body caps">
@@ -48,12 +55,17 @@ const capabilities = [
     </div>
 
     <aside class="engine" aria-labelledby="engine-title">
-      <p class="engine__claim" id="engine-title">Un mismo motor, muchas industrias.</p>
-      <p class="engine__now">Hoy, logística. Después, finanzas, salud, atención al cliente y más.</p>
+      <p class="engine__claim" id="engine-title">En logística, el agente asume:</p>
       <ul class="engine__traits">
-        <li>Implementación ágil, por fases</li>
-        <li>Precio accesible frente a soluciones enterprise</li>
-        <li>Sin necesidad de un equipo técnico propio</li>
+        {
+          uses.map((u) => (
+            <li>
+              <span>
+                <strong>{u.title}:</strong> {u.text}
+              </span>
+            </li>
+          ))
+        }
       </ul>
     </aside>
   </div>
@@ -68,9 +80,9 @@ const capabilities = [
   }
 
   .hot {
-    color: var(--neon);
+    color: var(--kiwi);
     font-weight: 700;
-    text-shadow: var(--glow);
+    
   }
 
   .caps {
@@ -106,29 +118,32 @@ const capabilities = [
     padding: clamp(1.5rem, 3vw, 2.5rem);
     display: grid;
     gap: 1rem;
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--neon) 30%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kiwi) 30%, transparent);
   }
 
   .engine__claim {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: var(--step-4);
-    line-height: 1.05;
+    font-size: var(--step-3);
+    line-height: 1.1;
     text-wrap: balance;
   }
 
   .engine__now {
+    font-size: var(--step--1);
     color: color-mix(in srgb, var(--cream) 80%, var(--deep));
     text-wrap: pretty;
   }
 
   .engine__traits {
-    margin-top: 0.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid color-mix(in srgb, var(--cream) 25%, transparent);
     display: grid;
-    gap: 0.5rem;
-    font-weight: 600;
+    gap: 0.55rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--cream) 25%, transparent);
+  }
+
+  .engine__traits strong {
+    color: var(--kiwi);
   }
 
   .engine__traits li {
@@ -143,7 +158,7 @@ const capabilities = [
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--neon);
+    background: var(--kiwi);
     transform: translateY(-1px);
   }
 

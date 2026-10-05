@@ -1,7 +1,7 @@
 /**
  * Orden narrativo del deck. Cada slide sabe su tema (oscuro para abrir y cerrar,
  * crema para contenido denso) y la frase que la conecta con la siguiente:
- * problema → necesidad de fondo → a quién → cómo → por qué nosotros → qué tan sólido es el análisis.
+ * problema → solución → competencia → valor → 4P → red de nodos → ruta → relación → costos → cómo arrancar.
  */
 export type SlideTheme = 'dark' | 'light';
 
@@ -23,57 +23,81 @@ export const slides: SlideMeta[] = [
   },
   {
     id: 'problema',
-    label: 'El problema',
+    label: 'La problemática',
     theme: 'light',
     transition: 'Ese costo tiene solución, y no exige un equipo técnico.',
   },
   {
     id: 'kiwano',
-    label: '¿Qué es Kiwano?',
+    label: 'La solución',
     theme: 'dark',
-    transition: 'Detrás de la eficiencia hay una necesidad más básica.',
+    transition: 'No es la única opción en el mercado.',
   },
   {
-    id: 'necesidad',
-    label: 'La necesidad de fondo',
+    id: 'competencia',
+    label: 'Panorama competitivo',
     theme: 'light',
-    transition: '¿Quién siente esa necesidad todos los días?',
+    transition: '¿Qué valor genera?',
   },
   {
-    id: 'cliente',
-    label: '¿A quién le hablamos?',
+    id: 'valor',
+    label: 'Fundamentación',
+    theme: 'light',
+    transition: 'Así se empaqueta ese valor.',
+  },
+  {
+    id: 'oferta',
+    label: 'Producto y precio',
     theme: 'dark',
-    transition: 'Así se ve Kiwano dentro de su operación.',
+    transition: '¿Cómo llega al cliente?',
   },
   {
-    id: 'logistica',
-    label: 'Ejemplo en logística',
+    id: 'canal',
+    label: 'Plaza y promoción',
     theme: 'light',
-    transition: 'Y así se lleva a producción sin poner en riesgo la operación.',
+    transition: 'Ese canal tiene direcciones en Bogotá.',
+  },
+  {
+    id: 'red',
+    label: 'Red de nodos',
+    theme: 'dark',
+    transition: 'Con los puntos ubicados, se miden las distancias.',
+  },
+  {
+    id: 'distancias',
+    label: 'Distancias y horarios',
+    theme: 'light',
+    transition: 'Con las distancias, ¿desde dónde conviene atenderlos?',
+  },
+  {
+    id: 'pmedianas',
+    label: 'P-medianas',
+    theme: 'light',
+    transition: 'Y para atender a esos clientes, ¿qué proveedor usa cada uno?',
+  },
+  {
+    id: 'transporte',
+    label: 'Modelo de transporte',
+    theme: 'dark',
+    transition: 'Y con cada actor de la red, una estrategia.',
+  },
+  {
+    id: 'relacion',
+    label: 'Estrategia de relación',
+    theme: 'light',
+    transition: '¿Cuánto cuesta operar?',
+  },
+  {
+    id: 'costos',
+    label: 'Costos',
+    theme: 'light',
+    transition: 'Así arranca un cliente.',
   },
   {
     id: 'implementacion',
     label: '¿Cómo se implementa?',
     theme: 'dark',
-    transition: 'No somos los únicos en el mercado. Sí somos los que encajan.',
-  },
-  {
-    id: 'competencia',
-    label: '¿Existe competencia?',
-    theme: 'light',
-    transition: 'Con claridad sobre dónde estamos parados.',
-  },
-  {
-    id: 'dofa',
-    label: 'Análisis DOFA',
-    theme: 'light',
-    transition: 'Y con el rigor de descartar lo que no aplica.',
-  },
-  {
-    id: 'metodologia',
-    label: 'Nota metodológica',
-    theme: 'light',
-    transition: 'El análisis sostiene la propuesta. Este es el siguiente paso.',
+    transition: 'Para cerrar.',
   },
   {
     id: 'cierre',

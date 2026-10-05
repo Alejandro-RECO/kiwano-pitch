@@ -19,3 +19,4 @@ pnpm-debug.log*
 # macOS / Windows
 .DS_Store
 Thumbs.db
+informe/red-kiwano.json

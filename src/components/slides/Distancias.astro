@@ -1,0 +1,206 @@
+---
+import Slide from '../Slide.astro';
+import mapaImg from '../../assets/mapa-bogota.webp';
+import { nodos, sede, matriz, proyectarMapa, planDeVisitas, aHora, mapa } from '../../data/red';
+
+const { ancho: W, alto: H, p } = proyectarMapa(560);
+const km = (n: number) => n.toLocaleString('es-CO', { maximumFractionDigits: 1 });
+const s = nodos.indexOf(sede);
+
+/* Orden de visita respetando el horario de cada cliente; numeración continua para cruzar mapa y tabla. */
+const jornadas = planDeVisitas();
+let k = 0;
+const paradas = jornadas.flatMap((j) =>
+  j.paradas.map((st) => ({ ...st, dia: j.dia, num: ++k, desdeSede: matriz[s][nodos.indexOf(st.nodo)] })),
+);
+/* Colores escritos en el propio SVG: el mapa se ve bien aunque la hoja de estilos llegue tarde. */
+const tinta = { 1: '#1b4d3e', 2: '#8c7355', 3: '#121413' } as Record<number, string>;
+const guion = { 1: 'none', 2: '7 5', 3: '2 5' } as Record<number, string>;
+
+const trazo = (j: (typeof jornadas)[number]) =>
+  [sede, ...j.paradas.map((st) => st.nodo), sede].map((n) => `${p(n).x},${p(n).y}`).join(' ');
+---
+
+<Slide id="distancias">
+  <p class="slide__eyebrow">Distancias y ventanas de tiempo</p>
+  <h2 class="slide__title">Ruta de visitas a clientes</h2>
+  <p class="slide__lead">Cada cliente se visita dentro de su horario de atención.</p>
+
+  <div class="slide__body split">
+    <figure class="map">
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="ruta-t">
+        <title id="ruta-t">Ruta de visitas a los clientes sobre el mapa de Bogotá, saliendo de la sede de Kiwano</title>
+        <image href={mapaImg.src} x="0" y="0" width={W} height={H} preserveAspectRatio="none" />
+        {
+          jornadas.map((j) => (
+            <polyline
+              points={trazo(j)}
+              fill="none"
+              stroke={tinta[j.dia]}
+              stroke-width="2.5"
+              stroke-linejoin="round"
+              stroke-dasharray={guion[j.dia]}
+            />
+          ))
+        }
+        {
+          paradas.map((st) => (
+            <g>
+              <circle cx={p(st.nodo).x} cy={p(st.nodo).y} r="10" fill={tinta[st.dia]} stroke="#f7f4ef" stroke-width="2" />
+              <text
+                x={p(st.nodo).x}
+                y={p(st.nodo).y + 4}
+                text-anchor="middle"
+                font-size="11"
+                font-weight="600"
+                fill="#f7f4ef"
+              >
+                {st.num}
+              </text>
+            </g>
+          ))
+        }
+        <circle cx={p(sede).x} cy={p(sede).y} r="12" fill="#121413" stroke="#9dbf85" stroke-width="3" />
+        <text x={p(sede).x} y={p(sede).y + 4.5} text-anchor="middle" font-size="13" font-weight="700" fill="#f7f4ef">
+          K
+        </text>
+      </svg>
+      <figcaption>{mapa.atribucion}</figcaption>
+    </figure>
+
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Cliente</th>
+          <th scope="col">Desde la sede</th>
+          <th scope="col">Horario</th>
+          <th scope="col">Llega</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          paradas.map((st) => (
+            <tr class:list={{ cut: st.num > 1 && st.dia !== paradas[st.num - 2].dia }}>
+              <td>
+                <span class={`n n--${st.dia}`}>{st.num}</span>
+              </td>
+              <th scope="row">{st.nodo.corto}</th>
+              <td>{km(st.desdeSede)} km</td>
+              <td class="muted">
+                {st.nodo.abre}–{st.nodo.cierra}
+              </td>
+              <td>
+                <b>{aHora(st.inicio)}</b>
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Distancias de los 20 nodos entre sí: matriz completa en el informe.</p>
+</Slide>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    align-items: center;
+  }
+
+  .map {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .map svg {
+    width: 100%;
+    height: auto;
+    max-height: 58vh;
+    background: var(--cream);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    font-family: var(--font-display);
+  }
+
+  .map figcaption {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  .n--1 {
+    background: var(--deep);
+  }
+
+  .n--2 {
+    background: var(--brown);
+  }
+
+  .n--3 {
+    background: var(--ink);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--step--1);
+    font-variant-numeric: tabular-nums;
+  }
+
+  thead th {
+    text-align: left;
+    font-weight: 600;
+    color: var(--muted);
+    padding: 0 0.5rem 0.4rem 0;
+    border-bottom: 2px solid var(--deep);
+  }
+
+  tbody th,
+  td {
+    padding: 0.3rem 0.5rem 0.3rem 0;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  tr.cut > * {
+    border-top: 2px solid var(--line);
+  }
+
+  tbody th {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--title);
+  }
+
+  .n {
+    display: inline-grid;
+    place-items: center;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .muted {
+    color: var(--muted);
+  }
+
+  .note {
+    margin-top: 0.9rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 900px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

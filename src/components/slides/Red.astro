@@ -1,0 +1,275 @@
+---
+import Slide from '../Slide.astro';
+import mapaImg from '../../assets/mapa-bogota.webp';
+import { nodos, sede, proyectarMapa, mapa, conteo, promptGrafico, type Nodo } from '../../data/red';
+
+const { ancho: W, alto: H, p } = proyectarMapa(640);
+
+/* Posición de etiqueta ajustada a mano donde los nodos se enciman (Chapinero, Montevideo). */
+const ajustes: Record<string, [anchor: 'start' | 'end', dx: number, dy: number]> = {
+  N03: ['start', 11, -2],
+  N01: ['end', -11, 2],
+  N10: ['start', 11, 8],
+  N04: ['end', -11, 4],
+  N05: ['start', -8, -14],
+  N07: ['start', 11, 10],
+  N11: ['end', -9, -6],
+  N13: ['start', 11, 2],
+  N14: ['start', 11, -2],
+  N16: ['start', 11, 6],
+  N17: ['end', -11, 9],
+  N18: ['end', -11, 2],
+  N19: ['end', -11, -1],
+  N20: ['end', -11, 4],
+};
+const etiqueta = (n: Nodo) => {
+  const { x, y } = p(n);
+  const [anchor, dx, dy] = ajustes[n.id] ?? ['start', 11, 4];
+  return { x: x + dx, y: y + dy, anchor };
+};
+
+/* La sede funciona dentro del coworking: se dibuja una sola marca para ambos. */
+const enSede = (n: Nodo) => n.tipo !== 'sede' && n.lat === sede.lat && n.lon === sede.lon;
+
+const tipos = [
+  { tipo: 'cliente', nombre: 'Clientes', n: conteo.cliente, donde: 'Occidente: Fontibón, Montevideo, Puente Aranda' },
+  { tipo: 'proveedor', nombre: 'Proveedores', n: conteo.proveedor, donde: 'Junto a la sede, en Chapinero' },
+  { tipo: 'competencia', nombre: 'Competidores', n: conteo.competencia, donde: 'Chapinero y Usaquén' },
+] as const;
+---
+
+<Slide id="red">
+  <p class="slide__eyebrow">Base de datos · 20 nodos</p>
+  <h2 class="slide__title">Red de nodos en Bogotá</h2>
+
+  <div class="slide__body split">
+    <figure class="map">
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="red-t">
+        <title id="red-t">
+          {`Mapa de Bogotá con la sede de Kiwano, ${conteo.cliente} clientes, ${conteo.proveedor} proveedores y ${conteo.competencia} competidores`}
+        </title>
+        <image href={mapaImg.src} x="0" y="0" width={W} height={H} preserveAspectRatio="none" />
+        <g class="compass" aria-hidden="true">
+          <text x="18" y="30">N</text>
+          <path d="M22 38 l0 22 M17 44 l5 -6 l5 6"></path>
+        </g>
+        {
+          nodos
+            .filter((n) => n.tipo !== 'sede' && !enSede(n))
+            .map((n) => {
+              const { x, y } = p(n);
+              const t = etiqueta(n);
+              return (
+                <g class={`node node--${n.tipo}`}>
+                  <title>{`${n.nombre} · ${n.localidad}`}</title>
+                  {n.tipo === 'cliente' && <circle cx={x} cy={y} r="7" />}
+                  {n.tipo === 'proveedor' && <rect x={x - 6.5} y={y - 6.5} width="13" height="13" rx="2" />}
+                  {n.tipo === 'competencia' && <path d={`M${x} ${y - 8} L${x + 8} ${y + 6} L${x - 8} ${y + 6} Z`} />}
+                  <text x={t.x} y={t.y} text-anchor={t.anchor}>
+                    {n.corto}
+                  </text>
+                </g>
+              );
+            })
+        }
+        <g class="node node--sede">
+          <circle cx={p(sede).x} cy={p(sede).y} r="15" />
+          <text x={p(sede).x} y={p(sede).y + 5} text-anchor="middle">K</text>
+          <text x={p(sede).x - 20} y={p(sede).y - 10} text-anchor="end" class="sede__label">Sede</text>
+        </g>
+      </svg>
+      <figcaption>{mapa.atribucion}</figcaption>
+    </figure>
+
+    <div class="side">
+      <ul class="legend" aria-label="Tipos de nodo">
+        {
+          tipos.map((t) => (
+            <li>
+              <span class={`sw sw--${t.tipo}`} />
+              <b class="legend__n">{t.n}</b>
+              <span>
+                <b>{t.nombre}</b>
+                <small>{t.donde}</small>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="prompt"><b>Generado con Claude.</b> Prompt: «{promptGrafico}»</p>
+    </div>
+  </div>
+</Slide>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(240px, 0.75fr);
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    align-items: center;
+  }
+
+  .slide__body {
+    margin-top: clamp(1rem, 3vh, 1.75rem);
+  }
+
+  /* El mapa es claro en cualquier tema: sus colores no dependen de la slide. */
+  .map {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .map svg {
+    width: 100%;
+    height: auto;
+    max-height: 66vh;
+    background: var(--cream);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    font-family: var(--font-body);
+  }
+
+  .map figcaption {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  .compass text {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 600;
+    fill: var(--ink);
+  }
+
+  .compass path {
+    stroke: var(--ink);
+    stroke-width: 1.5;
+    fill: none;
+  }
+
+  .node text {
+    font-size: 11.5px;
+    font-weight: 700;
+    fill: var(--ink);
+    paint-order: stroke;
+    stroke: var(--cream);
+    stroke-width: 3.5px;
+  }
+
+  .node--cliente circle {
+    fill: var(--deep);
+    stroke: var(--cream);
+    stroke-width: 2;
+  }
+
+  .node--proveedor rect {
+    fill: var(--brown);
+  }
+
+  .node--competencia path {
+    fill: var(--cream);
+    stroke: var(--ink);
+    stroke-width: 2;
+  }
+
+  .node--sede circle {
+    fill: var(--ink);
+    stroke: var(--kiwi);
+    stroke-width: 3;
+  }
+
+  .node--sede .sede__label {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 800;
+    fill: var(--ink);
+    paint-order: stroke;
+    stroke: var(--cream);
+    stroke-width: 3.5px;
+  }
+
+  .node--sede text {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    fill: var(--cream);
+    stroke: none;
+  }
+
+  .side {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .legend {
+    display: grid;
+    gap: 1.1rem;
+  }
+
+  .legend li {
+    display: grid;
+    grid-template-columns: 16px 2.6rem 1fr;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .legend__n {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-4);
+    line-height: 1;
+    color: var(--title);
+  }
+
+  .legend li > span:last-child {
+    display: grid;
+    line-height: 1.3;
+  }
+
+  .legend small {
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+
+  .sw {
+    width: 16px;
+    height: 16px;
+  }
+
+  .sw--cliente {
+    border-radius: 50%;
+    background: var(--deep);
+    box-shadow: inset 0 0 0 2px var(--cream);
+  }
+
+  .sw--proveedor {
+    border-radius: 3px;
+    background: var(--brown);
+  }
+
+  .sw--competencia {
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    background: var(--cream);
+  }
+
+  .prompt {
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+
+  .prompt b {
+    color: var(--fg);
+  }
+
+  @media (max-width: 900px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

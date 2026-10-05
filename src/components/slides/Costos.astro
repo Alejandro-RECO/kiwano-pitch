@@ -1,0 +1,253 @@
+---
+import Slide from '../Slide.astro';
+import {
+  costos,
+  cop,
+  millones,
+  fijosPorGrupo,
+  totalFijos,
+  totalCampana,
+  transporteMes,
+  kmMes,
+  precioAgente,
+  cvAgente,
+  margenAgente,
+  equilibrio,
+} from '../../data/costos';
+
+const max = fijosPorGrupo[0].total;
+const pct = (n: number) => `${(n * 100).toLocaleString('es-CO', { maximumFractionDigits: 1 })} %`;
+const variables = costos.variablesCliente.map((v) => ({
+  concepto: v.corto,
+  valor: v.tipo === 'pct' ? v.valor * precioAgente : v.valor,
+  detalle: v.tipo === 'pct' ? pct(v.valor) : '',
+}));
+---
+
+<Slide id="costos">
+  <h2 class="slide__title">Costos fijos y variables</h2>
+  <p class="slide__lead">
+    Operar Kiwano cuesta {millones(totalFijos + totalCampana)} al mes. Con{' '}
+    <strong class="hl">{equilibrio} clientes</strong> la operación se paga sola.
+  </p>
+
+  <div class="slide__body grid">
+    <section class="block" aria-labelledby="cf-t">
+      <header>
+        <h3 id="cf-t">Fijos</h3>
+        <span class="total">{millones(totalFijos)} / mes</span>
+      </header>
+      <ul class="bars">
+        {
+          fijosPorGrupo.map((g) => (
+            <li>
+              <span class="bars__label">{g.grupo}</span>
+              <span class="bars__track">
+                <span class="bars__fill" style={`--w:${(g.total / max) * 100}%`} />
+              </span>
+              <span class="bars__val">{g.total >= 1e5 ? millones(g.total) : cop(g.total)}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="note">
+        Sueldos con prestaciones ({pct(costos.cargaPrestacional)}).
+      </p>
+    </section>
+
+    <section class="block" aria-labelledby="cv-t">
+      <header>
+        <h3 id="cv-t">Variables</h3>
+        <span class="total">por cliente y por campaña</span>
+      </header>
+      <table>
+        <caption class="visually-hidden">Costo variable por cliente del plan Agente</caption>
+        <tbody>
+          {
+            variables.map((v) => (
+              <tr>
+                <th scope="row">
+                  {v.concepto} {v.detalle && <span class="muted">({v.detalle})</span>}
+                </th>
+                <td>{cop(v.valor)}</td>
+              </tr>
+            ))
+          }
+          <tr class="sum">
+            <th scope="row">Por cliente del plan Agente</th>
+            <td>{cop(cvAgente)}</td>
+          </tr>
+          {
+            costos.variablesCampana.map((v) => (
+              <tr>
+                <th scope="row">{v.corto}</th>
+                <td>{cop(v.valor)}</td>
+              </tr>
+            ))
+          }
+          <tr>
+            <th scope="row">Gasolina visitas comerciales ({Math.round(kmMes)} km)</th>
+            <td>{cop(transporteMes)}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <aside class="margin" aria-label="Margen por cliente">
+      <p class="margin__k">Cada cliente del plan Agente deja</p>
+      <p class="margin__v">{cop(margenAgente)}</p>
+      <p class="margin__s">
+        de {cop(precioAgente)} al mes: margen del {pct(margenAgente / precioAgente)}.
+      </p>
+    </aside>
+  </div>
+</Slide>
+
+<style>
+  .hl {
+    color: var(--deep);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(200px, 0.55fr);
+    gap: clamp(1rem, 2.5vw, 2rem);
+    align-items: start;
+  }
+
+  .block header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.9rem;
+    border-bottom: 2px solid var(--deep);
+  }
+
+  .block h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-3);
+    color: var(--title);
+  }
+
+  .total {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--deep);
+  }
+
+  .bars {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .bars li {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+    gap: 0.6rem;
+    align-items: center;
+    font-size: var(--step--1);
+  }
+
+  .bars__track {
+    height: 0.8rem;
+    border-radius: 999px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .bars__fill {
+    display: block;
+    height: 100%;
+    width: var(--w);
+    min-width: 4px;
+    border-radius: inherit;
+    background: var(--deep);
+  }
+
+  .bars li:first-child .bars__fill {
+    background: var(--brown);
+  }
+
+  .bars__val {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .note {
+    margin-top: 0.9rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  th {
+    text-align: left;
+    font-weight: 500;
+    padding: 0.32rem 0.5rem 0.32rem 0;
+    text-wrap: pretty;
+  }
+
+  td {
+    text-align: right;
+    font-weight: 700;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  tr + tr th,
+  tr + tr td {
+    border-top: 1px solid var(--line);
+  }
+
+  .sum th,
+  .sum td {
+    font-weight: 800;
+    color: var(--deep);
+    border-top: 2px solid var(--deep) !important;
+    padding-bottom: 0.7rem;
+  }
+
+  .muted {
+    color: var(--muted);
+  }
+
+  .margin {
+    display: grid;
+    gap: 0.3rem;
+    padding: clamp(1.1rem, 2vw, 1.5rem);
+    border-radius: var(--radius-l);
+    background: var(--deep);
+    color: var(--cream);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kiwi) 35%, transparent);
+  }
+
+  .margin__k,
+  .margin__s {
+    font-size: var(--step--1);
+    color: color-mix(in srgb, var(--cream) 80%, var(--deep));
+    text-wrap: pretty;
+  }
+
+  .margin__v {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-4);
+    line-height: 1.05;
+    color: var(--kiwi);
+  }
+
+  @media (max-width: 1000px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,164 @@
+---
+import Slide from '../Slide.astro';
+import Icon from '../Icon.astro';
+
+/* Plaza: el producto es digital, pero el valor fluye por una cadena concreta. */
+const flujo = [
+  { icon: 'cloud', title: 'Proveedores', text: 'Nube (XMS), conectividad (ETB), oficina (WeWork).' },
+  { icon: 'bot', title: 'Kiwano', text: 'Diseña y supervisa los agentes.' },
+  { icon: 'network', title: 'Integración', text: 'Remota con ERP, TMS y WhatsApp.' },
+  { icon: 'building', title: 'Pyme', text: 'Agente funcionando y tablero de resultados.' },
+] as const;
+
+const promocion = [
+  { icon: 'door-open', title: 'Puerta a puerta', text: 'Zonas logísticas, diagnóstico gratis de 30 min.' },
+  { icon: 'megaphone', title: 'Redes sociales', text: 'LinkedIn, Instagram y TikTok con casos reales.' },
+  { icon: 'handshake', title: 'Referidos', text: 'Un mes gratis por cada cliente referido.' },
+] as const;
+---
+
+<Slide id="canal">
+  <h2 class="slide__title">Plaza y promoción</h2>
+  <p class="slide__lead">Se entrega en la nube. Se vende cara a cara.</p>
+
+  <div class="slide__body split">
+    <section aria-labelledby="plaza-t">
+      <h3 class="block__title" id="plaza-t"><span class="tag">Plaza</span> Flujo de valor</h3>
+      <ol class="flow">
+        {
+          flujo.map((f) => (
+            <li class="flow__step">
+              <span class="disc">
+                <Icon name={f.icon} />
+              </span>
+              <div>
+                <h4>{f.title}</h4>
+                <p>{f.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section aria-labelledby="promo-t">
+      <h3 class="block__title" id="promo-t"><span class="tag">Promoción</span> Cómo llegamos</h3>
+      <ul class="promo">
+        {
+          promocion.map((p) => (
+            <li class="promo__item">
+              <span class="disc disc--brown">
+                <Icon name={p.icon} />
+              </span>
+              <div>
+                <h4>{p.title}</h4>
+                <p>{p.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+</Slide>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+
+  .block__title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-3);
+    line-height: 1.1;
+    color: var(--title);
+    margin-bottom: 1.25rem;
+  }
+
+  .tag {
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    background: var(--deep);
+    color: var(--cream);
+  }
+
+  .flow {
+    position: relative;
+    display: grid;
+    gap: 1rem;
+  }
+
+  /* Línea que conecta el flujo de valor de proveedor a cliente. */
+  .flow::before {
+    content: '';
+    position: absolute;
+    top: 1.6rem;
+    bottom: 1.6rem;
+    left: 1.6rem;
+    width: 2px;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, var(--deep), var(--kiwi));
+  }
+
+  .flow__step,
+  .promo__item {
+    position: relative;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .flow__step .disc {
+    box-shadow: 0 0 0 5px var(--bg);
+  }
+
+  .flow__step:last-child .disc {
+    box-shadow:
+      0 0 0 5px var(--bg),
+      0 0 0 7px var(--kiwi);
+  }
+
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-1);
+    line-height: 1.15;
+    color: var(--fg);
+  }
+
+  .flow p,
+  .promo p {
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+
+  .promo {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .promo__item {
+    align-items: flex-start;
+    padding: 1rem 1.1rem;
+    background: var(--surface);
+    border-radius: var(--radius-m);
+  }
+
+  @media (max-width: 900px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

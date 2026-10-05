@@ -1,0 +1,173 @@
+{
+  "fecha": "octubre de 2026",
+  "trm": 3312.84,
+  "cargaPrestacional": 0.384,
+  "notaCarga": "SAS exonerada de salud, SENA e ICBF (art. 114-1 ET) para salarios < 10 SMMLV. Sin exoneración la carga sería ≈ 51,9 %.",
+  "fijos": [
+    {
+      "grupo": "Sueldos",
+      "concepto": "2 fundadores (3.000.000 c/u)",
+      "valor": 6000000,
+      "prestacional": true,
+      "fuente": "Supuesto del equipo"
+    },
+    {
+      "grupo": "Sueldos",
+      "concepto": "Desarrollador junior",
+      "valor": 4000000,
+      "prestacional": true,
+      "fuente": "https://jobrise.io/es/blog/salario-backend-developer-bogota-2026/"
+    },
+    {
+      "grupo": "Sueldos",
+      "concepto": "Comercial de campo (SMMLV 2026)",
+      "valor": 1750905,
+      "prestacional": true,
+      "fuente": "https://consultorsalud.com/aumento-del-salario-minimo-en-colombia-2026/"
+    },
+    {
+      "grupo": "Sueldos",
+      "concepto": "Auxilio de transporte del comercial",
+      "valor": 249095,
+      "prestacional": false,
+      "fuente": "https://consultorsalud.com/aumento-del-salario-minimo-en-colombia-2026/"
+    },
+    {
+      "grupo": "Arriendo",
+      "concepto": "4 puestos en WeWork Calle 93 (≈ USD 141 c/u; incluye internet, servicios públicos y salas)",
+      "valor": 1868441,
+      "prestacional": false,
+      "fuente": "https://www.wework.com/es-LA/buildings/calle-93-19-55--bogota"
+    },
+    {
+      "grupo": "Servicios",
+      "concepto": "4 líneas móviles pospago (ETB)",
+      "valor": 160000,
+      "prestacional": false,
+      "fuente": "https://cuantomecuesta.com/co/plan-celular/"
+    },
+    {
+      "grupo": "Servicios",
+      "concepto": "Contabilidad y nómina tercerizada (G&D Consulting)",
+      "valor": 1000000,
+      "prestacional": false,
+      "fuente": "https://cuantomecuesta.com/co/contador/"
+    },
+    {
+      "grupo": "Tecnología",
+      "concepto": "Google Workspace (4) y GitHub Team (2)",
+      "valor": 212100,
+      "prestacional": false,
+      "fuente": "https://www.eesel.ai/es/blog/google-workspace-pricing"
+    },
+    {
+      "grupo": "Tecnología",
+      "concepto": "Infraestructura base en la nube vía partner XMS (servidor, base de datos; precio de referencia)",
+      "valor": 150000,
+      "prestacional": false,
+      "fuente": "https://cloudchipr.com/blog/aws-lightsail"
+    },
+    {
+      "grupo": "Impuestos",
+      "concepto": "Matrícula mercantil (278.531 al año, prorrateada)",
+      "valor": 23211,
+      "prestacional": false,
+      "fuente": "https://siemprealdia.co/colombia/contabilidad/renovacion-de-la-matricula-mercantil/"
+    }
+  ],
+  "variablesCliente": [
+    {
+      "concepto": "Modelos de IA y hosting por cliente (≈ 1.000 conversaciones/mes)",
+      "tipo": "valor",
+      "valor": 60000,
+      "fuente": "https://claude.com/pricing",
+      "corto": "IA y hosting"
+    },
+    {
+      "concepto": "Comisión del comercial",
+      "tipo": "pct",
+      "valor": 0.08,
+      "fuente": "https://blog.getcompass.ai/es/sales-commission-rates-by-industry",
+      "corto": "Comisión comercial"
+    },
+    {
+      "concepto": "Impuesto Régimen SIMPLE (servicios, incluye ICA)",
+      "tipo": "pct",
+      "valor": 0.059,
+      "fuente": "https://actualicese.com/corte-constitucional-declaro-inexequibles-normas-sobre-el-regimen-simple-de-tributacion/",
+      "corto": "Impuesto SIMPLE"
+    },
+    {
+      "concepto": "Pasarela de pago (Wompi 2,65 % + 700 + IVA)",
+      "tipo": "pct",
+      "valor": 0.0322,
+      "fuente": "https://www.bancolombia.com/negocios/productos/recaudos/datafono",
+      "corto": "Pasarela de pago"
+    }
+  ],
+  "variablesCampana": [
+    {
+      "concepto": "Pauta en Meta e Instagram",
+      "valor": 800000,
+      "fuente": "https://www.adamigo.ai/blog/meta-ads-cpm-cpc-benchmarks-by-country-2026",
+      "corto": "Pauta en redes"
+    },
+    {
+      "concepto": "1.000 volantes para puerta a puerta (Grafolito, cotización estimada)",
+      "valor": 300000,
+      "fuente": "https://operaciones.colombiacompra.gov.co/tienda-virtual-del-estado-colombiano/ordenes-compra/109903",
+      "corto": "1.000 volantes"
+    }
+  ],
+  "transporte": {
+    "concepto": "Gasolina de la moto del comercial (16.377 por galón, 90 km/galón)",
+    "copPorKm": 185,
+    "rutasPorMes": 4,
+    "fuente": "https://newsroom.rcnradio.com/colombia/precio-de-la-gasolina-sube-en-octubre-de-2026-este-sera-su-nuevo-valor"
+  },
+  "precios": [
+    {
+      "plan": "Diagnóstico",
+      "precio": 0,
+      "unidad": "una visita",
+      "incluye": "30 min en la empresa."
+    },
+    {
+      "plan": "Piloto",
+      "precio": 2500000,
+      "unidad": "pago único",
+      "incluye": "Un proceso, 6 semanas."
+    },
+    {
+      "plan": "Agente",
+      "precio": 1200000,
+      "unidad": "al mes",
+      "incluye": "Un agente en producción.",
+      "destacado": true
+    },
+    {
+      "plan": "Operación",
+      "precio": 3000000,
+      "unidad": "al mes",
+      "incluye": "Hasta 3 agentes y tablero."
+    }
+  ],
+  "referencia": {
+    "auxiliar": 2715572,
+    "auxiliarFuente": "https://www.portafolio.co/negocios/empresas/todos-los-costos-que-debe-pagar-una-empresa-por-un-empleado-que-se-gane-el-salario-minimo-485343",
+    "competidores": [
+      {
+        "nombre": "Automation Anywhere (bot desatendido)",
+        "usd": 500
+      },
+      {
+        "nombre": "Copilot Studio (25.000 créditos)",
+        "usd": 200
+      },
+      {
+        "nombre": "UiPath Basic (solo herramienta, sin implementación)",
+        "usd": 25
+      }
+    ]
+  }
+}

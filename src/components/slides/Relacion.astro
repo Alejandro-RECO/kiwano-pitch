@@ -1,0 +1,145 @@
+---
+import Slide from '../Slide.astro';
+import Icon from '../Icon.astro';
+import { nodos } from '../../data/red';
+
+const nombres = (tipo: string) =>
+  nodos
+    .filter((n) => n.tipo === tipo)
+    .map((n) => n.corto)
+    .join(', ');
+
+const frentes = [
+  {
+    icon: 'building',
+    tipo: 'Clientes',
+    relacion: 'Socio de operación',
+    pasos: ['Visita en su horario y diagnóstico gratis.', 'Piloto de 6 semanas.', 'Contrato mensual.'],
+    quienes: nombres('cliente'),
+  },
+  {
+    icon: 'handshake',
+    tipo: 'Proveedores',
+    relacion: 'Aliado estratégico',
+    pasos: ['Contratos por volumen.', 'Casos de éxito compartidos.', 'Referidos del partner tecnológico.'],
+    quienes: nombres('proveedor'),
+  },
+  {
+    icon: 'target',
+    tipo: 'Competencia',
+    relacion: 'Coopetencia',
+    pasos: ['Ellos: corporativos. Kiwano: pymes.', 'Referidos cruzados.', 'Monitoreo de precios.'],
+    quienes: nombres('competencia'),
+  },
+] as const;
+---
+
+<Slide id="relacion">
+  <h2 class="slide__title">Estrategia de relación</h2>
+  <p class="slide__lead">Un objetivo distinto para cada actor de la red.</p>
+
+  <ul class="slide__body fronts">
+    {
+      frentes.map((f) => (
+        <li class="front">
+          <header>
+            <span class="disc">
+              <Icon name={f.icon} />
+            </span>
+            <div>
+              <h3>{f.tipo}</h3>
+              <p class="front__rel">{f.relacion}</p>
+            </div>
+          </header>
+          <ol>
+            {f.pasos.map((p) => (
+              <li>{p}</li>
+            ))}
+          </ol>
+          <p class="front__who">{f.quienes}</p>
+        </li>
+      ))
+    }
+  </ul>
+</Slide>
+
+<style>
+  .fronts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 2.5vw, 2rem);
+  }
+
+  .front {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 1rem;
+    padding: clamp(1.1rem, 2vw, 1.5rem);
+    background: var(--surface);
+    border-radius: var(--radius-l);
+    border-top: 3px solid var(--deep);
+  }
+
+  .front header {
+    display: flex;
+    gap: 0.9rem;
+    align-items: center;
+  }
+
+  .front h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-3);
+    line-height: 1.05;
+    color: var(--title);
+  }
+
+  .front__rel {
+    font-weight: 700;
+    color: var(--deep);
+  }
+
+  .front ol {
+    display: grid;
+    gap: 0.6rem;
+    counter-reset: paso;
+  }
+
+  .front ol li {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    text-wrap: pretty;
+    counter-increment: paso;
+  }
+
+  .front ol li::before {
+    content: counter(paso);
+    flex: none;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--deep);
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 600;
+    transform: translateY(-1px);
+  }
+
+  .front__who {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 900px) {
+    .fronts {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

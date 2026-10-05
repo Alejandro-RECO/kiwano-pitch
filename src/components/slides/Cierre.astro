@@ -5,9 +5,6 @@ import Icon from '../Icon.astro';
 import logo from '../../assets/kiwano-logo.png';
 import { site } from '../../data/deck';
 
-const ctaHref = site.contactEmail
-  ? `mailto:${site.contactEmail}?subject=${encodeURIComponent('Diagnóstico con Kiwano')}`
-  : '#implementacion';
 ---
 
 <Slide id="cierre" bare>
@@ -22,12 +19,10 @@ const ctaHref = site.contactEmail
     />
     <h2 class="end__claim">{site.claim}</h2>
     <p class="end__text">
-      Kiwano es un motor de automatización expandible a cualquier industria: hoy logística; mañana finanzas, salud,
-      atención al cliente y más.
+      Hoy logística; mañana, cualquier industria.
     </p>
 
     <div class="end__actions">
-      <a class="btn btn--primary" href={ctaHref}>Empecemos con un diagnóstico</a>
       <button class="btn btn--ghost" type="button" data-action="print">
         <Icon name="printer" size={16} />
         Guardar como PDF
@@ -51,7 +46,6 @@ const ctaHref = site.contactEmail
     width: min(70vw, 420px);
     height: auto;
     margin-bottom: clamp(0.75rem, 3vh, 1.75rem);
-    filter: drop-shadow(0 0 22px color-mix(in srgb, var(--neon) 24%, transparent));
   }
 
   .end__claim {
@@ -93,16 +87,6 @@ const ctaHref = site.contactEmail
     border: 2px solid transparent;
   }
 
-  .btn--primary {
-    background: var(--neon);
-    color: var(--ink);
-    border-color: var(--neon);
-    box-shadow: var(--glow);
-  }
-
-  .btn--primary:hover {
-    box-shadow: 0 0 28px color-mix(in srgb, var(--neon) 75%, transparent);
-  }
 
   .btn--ghost {
     background: transparent;

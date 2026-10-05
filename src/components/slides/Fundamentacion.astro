@@ -1,10 +1,20 @@
 ---
 import Slide from '../Slide.astro';
+import { costos } from '../../data/costos';
+
+const agente = costos.precios.find((p) => p.plan === 'Agente')!.precio;
+const ahorro = Math.round((1 - agente / costos.referencia.auxiliar) * 100);
+
+const valor = [
+  { cifra: `−${ahorro} %`, titulo: 'en costo operativo', texto: 'frente a contratar un auxiliar' },
+  { cifra: '168 h', titulo: 'disponibles a la semana', texto: 'contra 48 h de un turno' },
+  { cifra: '6 semanas', titulo: 'para ver resultados', texto: 'para medir el piloto' },
+];
 ---
 
-<Slide id="necesidad">
-  <h2 class="slide__title">La necesidad de fondo</h2>
-  <p class="slide__lead">No vendemos tecnología. Vendemos control sobre la operación.</p>
+<Slide id="valor">
+  <h2 class="slide__title">Fundamentación: el valor</h2>
+  <p class="slide__lead">Lo que gana la pyme es control sobre su operación.</p>
 
   <div class="slide__body split">
     <figure class="pyramid">
@@ -40,27 +50,18 @@ import Slide from '../Slide.astro';
     </figure>
 
     <div class="how">
-      <p class="how__intro">
-        La necesidad principal es <strong>protección</strong>: que la operación no dependa de que alguien esté
-        disponible para revisar cada caso. La secundaria es <strong>subsistencia</strong>: que el negocio siga
-        facturando sin interrupciones ni sobrecostos.
-      </p>
-
-      <dl class="how__list">
-        <div>
-          <dt>Cómo la satisface: haciendo</dt>
-          <dd>Automatiza el proceso, decide con los criterios del cliente y previene errores antes de que cuesten.</dd>
-        </div>
-        <div>
-          <dt>Cómo la satisface: teniendo</dt>
-          <dd>La plataforma y sus agentes quedan como una herramienta propia del negocio, disponible todo el día.</dd>
-        </div>
-      </dl>
-
-      <p class="how__frame">
-        Marco de referencia: jerarquía de Maslow (nivel de seguridad) y matriz de Max-Neef (protección y
-        subsistencia, satisfechas por los ejes hacer y tener).
-      </p>
+      <ul class="stats">
+        {
+          valor.map((v) => (
+            <li>
+              <span class="stats__num">{v.cifra}</span>
+              <span>
+                <b>{v.titulo}</b> {v.texto}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </div>
 </Slide>
@@ -109,7 +110,7 @@ import Slide from '../Slide.astro';
 
   .tier--focus polygon {
     fill: var(--deep);
-    stroke: var(--neon);
+    stroke: var(--kiwi);
     stroke-width: 3;
   }
 
@@ -125,7 +126,7 @@ import Slide from '../Slide.astro';
   }
 
   .note circle {
-    fill: var(--neon);
+    fill: var(--kiwi);
     stroke: var(--deep);
     stroke-width: 2;
   }
@@ -152,36 +153,33 @@ import Slide from '../Slide.astro';
     color: var(--deep);
   }
 
-  .how__list {
+  .stats {
     display: grid;
-    gap: 0.9rem;
+    gap: 0.75rem;
   }
 
-  .how__list div {
-    padding: 0.9rem 1.1rem;
+  .stats li {
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.8rem 1.1rem;
     background: var(--surface);
     border-radius: var(--radius-m);
     border-left: 3px solid var(--deep);
+    text-wrap: pretty;
   }
 
-  .how__list dt {
+  .stats__num {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: var(--step-1);
+    font-size: var(--step-3);
+    line-height: 1;
+    color: var(--deep);
+  }
+
+  .stats b {
     color: var(--title);
-  }
-
-  .how__list dd {
-    margin-top: 0.25rem;
-    color: var(--muted);
-    text-wrap: pretty;
-  }
-
-  .how__frame {
-    font-size: var(--step--1);
-    color: var(--muted);
-    max-width: 52ch;
-    text-wrap: pretty;
   }
 
   @media (max-width: 900px) {
