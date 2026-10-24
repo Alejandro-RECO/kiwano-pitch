@@ -1,0 +1,240 @@
+---
+import Slide from '../Slide.astro';
+import { costos, millones, totalFijos, totalCampana, precioAgente, margenAgente, equilibrio } from '../../data/costos';
+
+const ahorro = Math.round((1 - precioAgente / costos.referencia.auxiliar) * 100);
+const margen = Math.round((margenAgente / precioAgente) * 100);
+const costoMes = totalFijos + totalCampana;
+
+const cifras = [
+  { cifra: `−${ahorro} %`, texto: 'costo para la pyme' },
+  { cifra: `${margen} %`, texto: 'margen por cliente' },
+  { cifra: millones(costoMes), texto: 'costo de operar al mes' },
+];
+
+/*
+ * Punto de equilibrio: margen que dejan los clientes contra el costo de operar.
+ * La meta del primer año (40 clientes) es un objetivo del equipo.
+ */
+const META = 40;
+const utilidadMeta = META * margenAgente - costoMes;
+const cruce = costoMes / margenAgente;
+
+const L = 56;
+const R = 520;
+const T = 24;
+const B = 290;
+const X_MAX = 44;
+const Y_MAX = 42e6;
+const x = (n: number) => L + (n / X_MAX) * (R - L);
+const y = (v: number) => B - (v / Y_MAX) * (B - T);
+const ingreso = (n: number) => n * margenAgente;
+const ticksX = [0, 10, 20, 30, 40];
+const ticksY = [0, 10e6, 20e6, 30e6, 40e6];
+
+const perdida = `${x(0)},${y(costoMes)} ${x(cruce)},${y(costoMes)} ${x(0)},${y(0)}`;
+const ganancia = `${x(cruce)},${y(costoMes)} ${x(X_MAX)},${y(ingreso(X_MAX))} ${x(X_MAX)},${y(costoMes)}`;
+---
+
+<Slide id="numeros">
+  <h2 class="slide__title">¿Es viable?</h2>
+  <p class="slide__lead">Barato para el cliente, rentable para Kiwano.</p>
+
+  <div class="slide__body split">
+    <ul class="figs">
+      {
+        cifras.map((c) => (
+          <li class="fig">
+            <span class="fig__num">{c.cifra}</span>
+            <p>{c.texto}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <figure class="chart">
+      <figcaption class="chart__title">
+        Con <b>{equilibrio} clientes</b>, Kiwano se paga solo
+      </figcaption>
+      <svg viewBox="0 0 560 330" role="img" aria-labelledby="eq-desc">
+        <desc id="eq-desc">
+          El margen de los clientes crece {millones(margenAgente)} por cliente. El costo de operar es fijo en {millones(costoMes)}
+          al mes. Las líneas se cruzan en {equilibrio} clientes. Con la meta de {META} clientes, la utilidad es de
+          {millones(utilidadMeta)} al mes.
+        </desc>
+        {
+          ticksY.map((t) => (
+            <g class="grid">
+              <line x1={L} x2={R} y1={y(t)} y2={y(t)} />
+              <text x={L - 8} y={y(t) + 4} text-anchor="end">
+                {t === 0 ? '0' : `$${t / 1e6} M`}
+              </text>
+            </g>
+          ))
+        }
+        {
+          ticksX.map((t) => (
+            <text class="tick" x={x(t)} y={B + 20} text-anchor="middle">
+              {t}
+            </text>
+          ))
+        }
+        <text class="tick" x={R} y={B + 38} text-anchor="end">clientes del plan Agente →</text>
+
+        <polygon class="zone zone--loss" points={perdida} />
+        <polygon class="zone zone--gain" points={ganancia} />
+        <text class="zone__label" x={x(cruce * 0.42)} y={y(costoMes * 0.62)} text-anchor="middle">Pérdida</text>
+        <text class="zone__label zone__label--gain" x={x(31)} y={y(costoMes + 2.2e6)} text-anchor="middle">Ganancia</text>
+
+        <line class="cost" x1={L} x2={R} y1={y(costoMes)} y2={y(costoMes)} />
+        <text class="label" x={L + 8} y={y(costoMes) - 10}>Costo de operar: {millones(costoMes)}</text>
+
+        <line class="income" x1={x(0)} y1={y(0)} x2={x(X_MAX)} y2={y(ingreso(X_MAX))} />
+        <text class="label" x={x(X_MAX) - 4} y={y(ingreso(X_MAX)) - 10} text-anchor="end">Margen de los clientes</text>
+
+        <line class="goal" x1={x(META)} x2={x(META)} y1={y(ingreso(META))} y2={y(costoMes - 11e6)} />
+        <text class="goal__label" x={x(META) + 6} y={y(costoMes - 13e6)} text-anchor="end">
+          Meta año 1 ({META} clientes): +{millones(utilidadMeta)}/mes
+        </text>
+
+        <g class="cross">
+          <circle cx={x(cruce)} cy={y(costoMes)} r="16" class="cross__halo" />
+          <circle cx={x(cruce)} cy={y(costoMes)} r="8" />
+          <text x={x(cruce)} y={y(costoMes) + 36} text-anchor="middle">{equilibrio} clientes</text>
+        </g>
+      </svg>
+    </figure>
+  </div>
+</Slide>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+  }
+  .figs {
+    display: grid;
+    gap: 0.9rem;
+  }
+  .fig {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.9rem 1.1rem;
+    background: var(--surface);
+    border-radius: var(--radius-m);
+    border-left: 3px solid var(--deep);
+  }
+  .fig__num {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-4);
+    line-height: 1;
+    color: var(--deep);
+  }
+  .fig p {
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+  .chart {
+    display: grid;
+    gap: 0.5rem;
+    padding: clamp(1rem, 2vw, 1.5rem);
+    background: var(--surface);
+    border-radius: var(--radius-l);
+  }
+  .chart__title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: var(--step-2);
+    color: var(--fg);
+  }
+  .chart__title b {
+    font-weight: 600;
+    color: var(--deep);
+  }
+  .chart svg {
+    width: 100%;
+    height: auto;
+    max-height: 54vh;
+    font-family: var(--font-body);
+    overflow: visible;
+  }
+  .grid line {
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+  .grid text,
+  .tick {
+    font-size: 12px;
+    fill: var(--muted);
+  }
+  .zone--loss {
+    fill: color-mix(in srgb, var(--brown) 22%, transparent);
+  }
+  .zone--gain {
+    fill: color-mix(in srgb, var(--kiwi) 40%, transparent);
+  }
+  .zone__label {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    fill: var(--brown);
+  }
+  .zone__label--gain {
+    fill: var(--deep);
+  }
+  .cost {
+    stroke: var(--brown);
+    stroke-width: 3;
+    stroke-dasharray: 8 6;
+  }
+  .income {
+    stroke: var(--deep);
+    stroke-width: 4;
+    stroke-linecap: round;
+  }
+  .label {
+    font-size: 14px;
+    font-weight: 800;
+    fill: var(--fg);
+    paint-order: stroke;
+    stroke: var(--surface);
+    stroke-width: 4px;
+  }
+  .goal {
+    stroke: var(--deep);
+    stroke-width: 2;
+    stroke-dasharray: 3 4;
+  }
+  .goal__label {
+    font-size: 13px;
+    font-weight: 700;
+    fill: var(--deep);
+  }
+  .cross circle {
+    fill: var(--deep);
+    stroke: var(--surface);
+    stroke-width: 2;
+  }
+  .cross .cross__halo {
+    fill: none;
+    stroke: var(--kiwi);
+    stroke-width: 3;
+  }
+  .cross text {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    fill: var(--deep);
+    paint-order: stroke;
+    stroke: var(--surface);
+    stroke-width: 4px;
+  }
+  @media (max-width: 900px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,128 @@
+---
+import Slide from '../Slide.astro';
+import Icon from '../Icon.astro';
+
+const cuadrantes = [
+  {
+    letra: 'F',
+    icon: 'shield-check',
+    titulo: 'Fortalezas',
+    items: [
+      'Motor expandible a cualquier industria.',
+      'Agentes entrenables con las reglas del cliente.',
+      'Precio accesible frente a la competencia enterprise.',
+    ],
+  },
+  {
+    letra: 'D',
+    icon: 'circle-off',
+    titulo: 'Debilidades',
+    items: ['Producto nuevo, sin trayectoria de mercado.', 'Depende de la calidad de los datos del cliente.'],
+  },
+  {
+    letra: 'O',
+    icon: 'trending-up',
+    titulo: 'Oportunidades',
+    items: ['Pymes latinoamericanas masivamente desatendidas.', 'Crecimiento explosivo del mercado de agentes de IA.'],
+  },
+  {
+    letra: 'A',
+    icon: 'bell',
+    titulo: 'Amenazas',
+    items: ['Competidores low-code avanzando rápido.', 'Grandes jugadores bajando precios para la pyme.'],
+  },
+] as const;
+---
+
+<Slide id="dofa">
+  <h2 class="slide__title">Matriz DOFA</h2>
+  <p class="slide__lead">La ventaja está en el precio y la medida; el riesgo, en ser nuevos.</p>
+
+  <ul class="slide__body quads">
+    {
+      cuadrantes.map((c) => (
+        <li class:list={['quad', { 'quad--in': c.letra === 'F' || c.letra === 'D' }]}>
+          <header>
+            <span class="disc">
+              <Icon name={c.icon} />
+            </span>
+            <h3>{c.titulo}</h3>
+            <span class="quad__letter" aria-hidden="true">
+              {c.letra}
+            </span>
+          </header>
+          <ul>
+            {c.items.map((i) => (
+              <li>{i}</li>
+            ))}
+          </ul>
+        </li>
+      ))
+    }
+  </ul>
+</Slide>
+
+<style>
+  .quads {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.9rem, 2vw, 1.5rem);
+  }
+  .quad {
+    display: grid;
+    gap: 0.9rem;
+    align-content: start;
+    padding: clamp(1rem, 2vw, 1.4rem);
+    background: var(--surface);
+    border-radius: var(--radius-l);
+    border-top: 3px solid var(--brown);
+  }
+  /* Factores internos (F, D) en verde; externos (O, A) en café. */
+  .quad--in {
+    border-top-color: var(--deep);
+  }
+  .quad header {
+    display: flex;
+    gap: 0.9rem;
+    align-items: center;
+  }
+  .quad h3 {
+    flex: 1;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-3);
+    line-height: 1.05;
+    color: var(--title);
+  }
+  .quad__letter {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-4);
+    line-height: 1;
+    color: color-mix(in srgb, var(--deep) 25%, transparent);
+  }
+  .quad ul {
+    display: grid;
+    gap: 0.45rem;
+  }
+  .quad ul li {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    text-wrap: pretty;
+  }
+  .quad ul li::before {
+    content: '';
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--kiwi);
+    transform: translateY(-1px);
+  }
+  @media (max-width: 900px) {
+    .quads {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

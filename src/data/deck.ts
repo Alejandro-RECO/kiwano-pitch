@@ -1,7 +1,7 @@
 /**
  * Orden narrativo del deck. Cada slide sabe su tema (oscuro para abrir y cerrar,
  * crema para contenido denso) y la frase que la conecta con la siguiente:
- * problema → solución → competencia → valor → 4P → red de nodos → ruta → relación → costos → cómo arrancar.
+ * problema → solución → cliente → competencia → precio → viabilidad → cierre.
  */
 export type SlideTheme = 'dark' | 'light';
 
@@ -31,72 +31,30 @@ export const slides: SlideMeta[] = [
     id: 'kiwano',
     label: 'La solución',
     theme: 'dark',
-    transition: 'No es la única opción en el mercado.',
+    transition: '¿Para quién es?',
+  },
+  {
+    id: 'cliente',
+    label: 'Cliente objetivo',
+    theme: 'light',
+    transition: '¿Y por qué Kiwano y no otro?',
   },
   {
     id: 'competencia',
     label: 'Panorama competitivo',
     theme: 'light',
-    transition: '¿Qué valor genera?',
-  },
-  {
-    id: 'valor',
-    label: 'Fundamentación',
-    theme: 'light',
-    transition: 'Así se empaqueta ese valor.',
+    transition: '¿Cuánto cuesta?',
   },
   {
     id: 'oferta',
     label: 'Producto y precio',
     theme: 'dark',
-    transition: '¿Cómo llega al cliente?',
+    transition: '¿Y es un negocio viable?',
   },
   {
-    id: 'canal',
-    label: 'Plaza y promoción',
+    id: 'numeros',
+    label: 'Viabilidad',
     theme: 'light',
-    transition: 'Ese canal tiene direcciones en Bogotá.',
-  },
-  {
-    id: 'red',
-    label: 'Red de nodos',
-    theme: 'dark',
-    transition: 'Con los puntos ubicados, se miden las distancias.',
-  },
-  {
-    id: 'distancias',
-    label: 'Distancias y horarios',
-    theme: 'light',
-    transition: 'Con las distancias, ¿desde dónde conviene atenderlos?',
-  },
-  {
-    id: 'pmedianas',
-    label: 'P-medianas',
-    theme: 'light',
-    transition: 'Y para atender a esos clientes, ¿qué proveedor usa cada uno?',
-  },
-  {
-    id: 'transporte',
-    label: 'Modelo de transporte',
-    theme: 'dark',
-    transition: 'Y con cada actor de la red, una estrategia.',
-  },
-  {
-    id: 'relacion',
-    label: 'Estrategia de relación',
-    theme: 'light',
-    transition: '¿Cuánto cuesta operar?',
-  },
-  {
-    id: 'costos',
-    label: 'Costos',
-    theme: 'light',
-    transition: 'Así arranca un cliente.',
-  },
-  {
-    id: 'implementacion',
-    label: '¿Cómo se implementa?',
-    theme: 'dark',
     transition: 'Para cerrar.',
   },
   {

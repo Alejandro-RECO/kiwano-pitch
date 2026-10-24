@@ -2,133 +2,177 @@
 import Slide from '../Slide.astro';
 import Icon from '../Icon.astro';
 
+/*
+ * Mapa de posicionamiento: precio para la pyme (x) contra qué tan a la medida
+ * del proceso es la solución (y). Ambos ejes van de 0 a 1; la ubicación es una
+ * valoración cualitativa del equipo.
+ */
 const groups = [
   {
-    icon: 'building',
-    title: 'RPA + IA (directa)',
-    who: 'UiPath, Automation Anywhere, Power Automate.',
-    gap: 'Caros y complejos para una pyme.',
+    title: 'RPA + IA',
+    who: 'UiPath, Power Automate',
+    px: 0.86,
+    py: 0.66,
   },
   {
-    icon: 'layers',
-    title: 'Agentes emergentes',
-    who: 'Plataformas low-code de agentes.',
-    gap: 'Genéricas, poco especializadas.',
+    title: 'Low-code',
+    who: 'Agentes genéricos',
+    px: 0.36,
+    py: 0.22,
   },
   {
-    icon: 'network',
-    title: 'Integradores locales',
-    who: 'Automaxia, IAC y Sophos (Chapinero).',
-    gap: 'Proyectos largos, cobro por proyecto.',
+    title: 'Integradores',
+    who: 'Automaxia, IAC, Sophos',
+    px: 0.72,
+    py: 0.86,
   },
 ] as const;
+const kiwano = { px: 0.2, py: 0.76 };
+const ventajas = ['Implementación ágil', 'Precio accesible', 'Hecho para pymes'];
+
+const L = 40;
+const R = 500;
+const T = 16;
+const B = 360;
+const x = (v: number) => L + v * (R - L);
+const y = (v: number) => B - v * (B - T);
+const midX = x(0.5);
+const midY = y(0.5);
 ---
 
 <Slide id="competencia">
   <h2 class="slide__title">Panorama competitivo</h2>
-  <p class="slide__lead">Existe, pero nadie atiende a la pyme logística en su propia bodega.</p>
+  <p class="slide__lead">Nadie atiende a la pyme a su medida y a su precio.</p>
 
-  <ul class="slide__body groups">
-    {
-      groups.map((g) => (
-        <li class="group">
-          <div class="group__head">
-            <span class="disc disc--brown">
-              <Icon name={g.icon} />
-            </span>
-            <h3>{g.title}</h3>
-          </div>
-          <dl>
-            <dt>Quiénes</dt>
-            <dd class="group__who">{g.who}</dd>
-            <dt>Su límite</dt>
-            <dd>{g.gap}</dd>
-          </dl>
-        </li>
-      ))
-    }
-  </ul>
+  <div class="slide__body split">
+    <figure class="map">
+      <svg viewBox="0 0 520 400" role="img" aria-labelledby="comp-desc">
+        <desc id="comp-desc">
+          Mapa de posicionamiento. RPA más IA: precio alto y medianamente a la medida. Integradores: precio alto y muy a la
+          medida. Low-code: precio medio y genérico. Kiwano: precio bajo y a la medida, un cuadrante que nadie ocupa.
+        </desc>
+        <rect class="zone" x={L} y={T} width={midX - L} height={midY - T} rx="14" />
+        <text class="zone__label" x={L + 14} y={T + 26}>Espacio libre</text>
 
-  <div class="diff">
-    <span class="diff__icon"><Icon name="target" /></span>
-    <div>
-      <h3>Diferenciador de Kiwano</h3>
-      <p>
-        Implementación ágil, precio accesible y foco en pymes.
-      </p>
+        <line class="axis" x1={L} y1={midY} x2={R} y2={midY} />
+        <line class="axis" x1={midX} y1={T} x2={midX} y2={B} />
+        <text class="axis__label" x={R} y={midY + 22} text-anchor="end">Precio alto →</text>
+        <text class="axis__label" x={L} y={midY + 22}>← Precio bajo</text>
+        <text class="axis__label" x={midX + 10} y={T + 14}>A la medida ↑</text>
+        <text class="axis__label" x={midX + 10} y={B - 6}>Genérico ↓</text>
+
+        {
+          groups.map((g) => (
+            <g class="dot">
+              <circle cx={x(g.px)} cy={y(g.py)} r="10" />
+              <text x={x(g.px)} y={y(g.py) + 30} text-anchor="middle">
+                {g.title}
+              </text>
+              <text class="dot__who" x={x(g.px)} y={y(g.py) + 47} text-anchor="middle">
+                {g.who}
+              </text>
+            </g>
+          ))
+        }
+
+        <g class="dot dot--kiwano">
+          <circle class="dot__halo" cx={x(kiwano.px)} cy={y(kiwano.py)} r="24" />
+          <circle cx={x(kiwano.px)} cy={y(kiwano.py)} r="15" />
+          <text x={x(kiwano.px)} y={y(kiwano.py) + 44} text-anchor="middle">Kiwano</text>
+        </g>
+      </svg>
+    </figure>
+
+    <div class="diff">
+      <span class="diff__icon"><Icon name="target" /></span>
+      <h3>Kiwano</h3>
+      <ul>
+        {
+          ventajas.map((v) => (
+            <li>
+              <Icon name="circle-check" size={22} />
+              {v}
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </div>
 </Slide>
 
 <style>
-  .groups {
+  .split {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(1rem, 2.5vw, 2rem);
-  }
-
-  .group {
-    display: grid;
-    gap: 1rem;
-    align-content: start;
-    padding-top: 1.25rem;
-    border-top: 2px solid var(--brown);
-  }
-
-  .group__head {
-    display: flex;
-    gap: 0.9rem;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.8fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
     align-items: center;
   }
-
-  .group h3 {
+  .map svg {
+    width: 100%;
+    height: auto;
+    max-height: 58vh;
+    font-family: var(--font-body);
+    background: var(--surface);
+    border-radius: var(--radius-l);
+  }
+  .zone {
+    fill: color-mix(in srgb, var(--kiwi) 28%, transparent);
+  }
+  .zone__label {
     font-family: var(--font-display);
+    font-size: 16px;
     font-weight: 600;
-    font-size: var(--step-2);
-    line-height: 1.1;
-    color: var(--title);
-    text-wrap: balance;
+    fill: var(--deep);
   }
-
-  .group dl {
-    display: grid;
-    gap: 0.2rem 0;
+  .axis {
+    stroke: var(--muted);
+    stroke-width: 1.5;
   }
-
-  .group dt {
-    font-size: var(--step--1);
-    color: var(--muted);
-  }
-
-  .group dd {
-    margin-bottom: 0.8rem;
-    color: var(--fg);
-    text-wrap: pretty;
-  }
-
-  .group dd:last-child {
-    margin-bottom: 0;
-  }
-
-  .group__who {
+  .axis__label {
+    font-size: 13px;
     font-weight: 700;
-    color: var(--deep);
+    fill: var(--muted);
   }
-
+  .dot circle {
+    fill: var(--brown);
+    stroke: var(--surface);
+    stroke-width: 2;
+  }
+  .dot text {
+    font-size: 14px;
+    font-weight: 700;
+    fill: var(--fg);
+  }
+  .dot--kiwano circle {
+    fill: var(--deep);
+  }
+  .dot--kiwano .dot__halo {
+    fill: none;
+    stroke: var(--kiwi);
+    stroke-width: 3;
+  }
+  .dot--kiwano text {
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 600;
+    fill: var(--deep);
+  }
+  .dot .dot__who {
+    font-size: 11.5px;
+    font-weight: 500;
+    fill: var(--muted);
+  }
   .diff {
-    margin-top: clamp(1.5rem, 4vh, 2.5rem);
-    display: flex;
-    gap: 1.25rem;
-    align-items: center;
-    padding: clamp(1.25rem, 2.5vw, 1.75rem) clamp(1.25rem, 3vw, 2rem);
+    display: grid;
+    justify-items: start;
+    gap: 1rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
     background: var(--deep);
     color: var(--cream);
     border-radius: var(--radius-l);
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kiwi) 35%, transparent);
   }
-
   .diff__icon {
-    flex: none;
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 50%;
@@ -137,32 +181,36 @@ const groups = [
     background: color-mix(in srgb, var(--cream) 18%, var(--deep));
     color: var(--kiwi);
   }
-
-  .diff__icon svg {
+  .diff__icon :global(svg) {
     width: 1.6rem;
     height: 1.6rem;
   }
-
   .diff h3 {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: var(--step-3);
-    line-height: 1.1;
+    font-size: var(--step-4);
+    line-height: 1;
+    color: var(--kiwi);
   }
-
-  .diff p {
-    margin-top: 0.35rem;
-    max-width: 70ch;
-    text-wrap: pretty;
+  .diff ul {
+    display: grid;
+    gap: 0.85rem;
   }
-
+  .diff li {
+    display: flex;
+    gap: 0.7rem;
+    align-items: center;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: var(--step-2);
+  }
+  .diff li :global(svg) {
+    flex: none;
+    color: var(--kiwi);
+  }
   @media (max-width: 900px) {
-    .groups {
+    .split {
       grid-template-columns: 1fr;
-    }
-    .diff {
-      flex-direction: column;
-      align-items: flex-start;
     }
   }
 </style>

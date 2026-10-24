@@ -1,53 +1,92 @@
 ---
 import Slide from '../Slide.astro';
-import Icon from '../Icon.astro';
 import { costos, cop } from '../../data/costos';
 
-const diferencias = [
-  { icon: 'sliders', text: 'A la medida de cada empresa.' },
-  { icon: 'rocket', text: 'Listo en semanas, sin programadores.' },
-  { icon: 'shield-check', text: 'Supervisión humana en cada decisión.' },
-] as const;
+const agente = costos.precios.find((p) => p.plan === 'Agente')!.precio;
+const auxiliar = costos.referencia.auxiliar;
+const ahorro = Math.round((1 - agente / auxiliar) * 100);
 
-const precio = (n: number) => (n === 0 ? 'Gratis' : cop(n));
+// Dos comparaciones con su propia escala: costo al mes y horas de trabajo a la semana.
+const comparaciones = [
+  {
+    titulo: 'Costo al mes',
+    max: auxiliar,
+    filas: [
+      { quien: 'Auxiliar', valor: auxiliar, texto: cop(auxiliar) },
+      { quien: 'Agente Kiwano', valor: agente, texto: cop(agente), hot: true },
+    ],
+    nota: `−${ahorro} %`,
+  },
+  {
+    titulo: 'Horas de trabajo a la semana',
+    max: 168,
+    filas: [
+      { quien: 'Auxiliar', valor: 48, texto: '48 h' },
+      { quien: 'Agente Kiwano', valor: 168, texto: '168 h', hot: true },
+    ],
+    nota: '3,5×',
+  },
+];
+
+const corto = (n: number) =>
+  n === 0 ? 'Gratis' : `$${(n / 1e6).toLocaleString('es-CO', { maximumFractionDigits: 1 })} M`;
+const detalles: Record<string, string> = {
+  Diagnóstico: '30 min',
+  Piloto: '6 semanas',
+  Agente: '1 agente',
+  Operación: '3 agentes',
+};
+const escalones = costos.precios.map((p) => ({
+  plan: p.plan,
+  precio: `${corto(p.precio)}${p.unidad === 'al mes' ? '/mes' : ''}`,
+  detalle: detalles[p.plan] ?? '',
+  hot: 'destacado' in p,
+}));
 ---
 
 <Slide id="oferta">
   <h2 class="slide__title">Producto y precio</h2>
-  <p class="slide__lead">Un agente cuesta menos de la mitad que un auxiliar y trabaja 24/7.</p>
+  <p class="slide__lead">Menos de la mitad del costo. Todo el día.</p>
 
   <div class="slide__body split">
     <section aria-labelledby="prod-t">
-      <h3 class="block__title" id="prod-t"><span class="tag">Producto</span> Qué lo hace distinto</h3>
-      <ul class="diffs">
+      <h3 class="block__title" id="prod-t"><span class="tag">Producto</span> Cuesta menos, trabaja más</h3>
+      <div class="compare">
         {
-          diferencias.map((d) => (
-            <li>
-              <span class="disc">
-                <Icon name={d.icon} />
-              </span>
-              <p>{d.text}</p>
-            </li>
+          comparaciones.map((c) => (
+            <figure class="bars">
+              <figcaption>
+                {c.titulo} <b class="bars__note">{c.nota}</b>
+              </figcaption>
+              <ul>
+                {c.filas.map((f) => (
+                  <li class:list={{ hot: 'hot' in f }}>
+                    <span class="bars__who">{f.quien}</span>
+                    <span class="bars__track">
+                      <span class="bars__fill" style={`--w: ${(f.valor / c.max) * 100}%`} />
+                    </span>
+                    <span class="bars__val">{f.texto}</span>
+                  </li>
+                ))}
+              </ul>
+            </figure>
           ))
         }
-      </ul>
-      <p class="vs">
-        Auxiliar con salario mínimo: <b>{cop(costos.referencia.auxiliar)}</b> al mes.<br />Agente Kiwano:{' '}
-        <b class="hot">{cop(costos.precios.find((p) => p.plan === 'Agente')!.precio)}</b> al mes.
-      </p>
+      </div>
     </section>
 
     <section aria-labelledby="precio-t">
-      <h3 class="block__title" id="precio-t"><span class="tag">Precio</span> De la prueba al contrato</h3>
-      <ol class="plans">
+      <h3 class="block__title" id="precio-t"><span class="tag">Precio</span> Paso a paso</h3>
+      <ol class="ladder">
         {
-          costos.precios.map((p) => (
-            <li class:list={['plan', { 'plan--hot': 'destacado' in p }]}>
-              <h4>{p.plan}</h4>
-              <p class="plan__price">
-                {precio(p.precio)} <span>{p.precio > 0 && p.unidad}</span>
-              </p>
-              <p class="plan__inc">{p.incluye}</p>
+          escalones.map((e, i) => (
+            <li class:list={['step', { 'step--hot': e.hot }]} style={`--h: ${40 + i * 20}%`}>
+              <span class="step__price">{e.precio}</span>
+              <span class="step__bar">
+                <span class="step__num">{i + 1}</span>
+                <b>{e.plan}</b>
+                <small>{e.detalle}</small>
+              </span>
             </li>
           ))
         }
@@ -88,88 +127,130 @@ const precio = (n: number) => (n === 0 ? 'Gratis' : cop(n));
     color: var(--cream);
   }
 
-  .diffs {
+  .compare {
     display: grid;
-    gap: 0.9rem;
+    gap: 1.5rem;
   }
-
-  .diffs li {
+  .bars {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .bars figcaption {
     display: flex;
-    gap: 1rem;
-    align-items: center;
+    justify-content: space-between;
+    align-items: baseline;
+    font-weight: 700;
+    color: var(--muted);
   }
-
-  .diffs p {
+  .bars__note {
+    font-family: var(--font-display);
     font-weight: 600;
-    text-wrap: pretty;
-  }
-
-  .vs {
-    margin-top: 1.4rem;
-    padding: 1rem 1.2rem;
-    border-left: 3px solid var(--kiwi);
-    background: var(--surface);
-    border-radius: 0 var(--radius-s) var(--radius-s) 0;
-    text-wrap: pretty;
-  }
-
-  .hot {
+    font-size: var(--step-3);
     color: var(--kiwi);
   }
-
-  .plans {
+  .bars ul {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.8rem;
+    gap: 0.5rem;
   }
-
-  .plan {
+  .bars li {
     display: grid;
-    gap: 0.25rem;
+    grid-template-columns: 7.5rem minmax(0, 1fr) 6.5rem;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  .bars__who {
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+  .bars__track {
+    height: 1.6rem;
+  }
+  .bars__fill {
+    display: block;
+    height: 100%;
+    width: var(--w);
+    border-radius: 0 4px 4px 0;
+    background: var(--brown);
+  }
+  .bars li.hot .bars__fill {
+    background: var(--kiwi);
+  }
+  .bars__val {
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .bars li.hot .bars__val {
+    color: var(--kiwi);
+  }
+  .ladder {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: end;
+    gap: 0.6rem;
+    height: clamp(240px, 40vh, 340px);
+  }
+  .step {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.4rem;
+    height: 100%;
+  }
+  .step__price {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-2);
+    line-height: 1;
+    text-align: center;
+    color: var(--fg);
+  }
+  .step__bar {
+    display: grid;
     align-content: start;
-    padding: 1rem 1.1rem;
-    border-radius: var(--radius-m);
+    justify-items: center;
+    gap: 0.2rem;
+    height: var(--h);
+    padding: 0.8rem 0.4rem;
+    border-radius: var(--radius-m) var(--radius-m) 4px 4px;
     background: var(--surface);
     border: 1.5px solid var(--line);
+    text-align: center;
   }
-
-  .plan--hot {
+  .step--hot .step__bar {
+    background: var(--deep);
     border-color: var(--kiwi);
-    box-shadow: var(--glow);
   }
-
-  .plan h4 {
+  .step--hot .step__price {
+    color: var(--kiwi);
+  }
+  .step__num {
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--brown);
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+  .step b {
     font-family: var(--font-display);
     font-weight: 600;
     font-size: var(--step-1);
     color: var(--title);
   }
-
-  .plan__price {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: var(--step-3);
-    line-height: 1.1;
-    color: var(--fg);
+  .step--hot b {
+    color: var(--cream);
   }
-
-  .plan__price span {
-    font-family: var(--font-body);
-    font-size: var(--step--1);
-    font-weight: 500;
-    color: var(--muted);
-  }
-
-  .plan__inc {
+  .step small {
     font-size: var(--step--1);
     color: var(--muted);
-    text-wrap: pretty;
   }
-
-
   @media (max-width: 900px) {
-    .split,
-    .plans {
+    .split {
       grid-template-columns: 1fr;
     }
   }

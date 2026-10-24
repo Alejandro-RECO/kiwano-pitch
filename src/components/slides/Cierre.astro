@@ -5,6 +5,14 @@ import Icon from '../Icon.astro';
 import logo from '../../assets/kiwano-logo.png';
 import { site } from '../../data/deck';
 
+// Hoja de ruta: el mismo motor, industria por industria.
+const industrias = [
+  { icon: 'truck', nombre: 'Logística', hoy: true },
+  { icon: 'package', nombre: 'Comercio' },
+  { icon: 'wallet', nombre: 'Finanzas' },
+  { icon: 'headset', nombre: 'Atención' },
+] as const;
+
 ---
 
 <Slide id="cierre" bare>
@@ -18,9 +26,19 @@ import { site } from '../../data/deck';
       loading="lazy"
     />
     <h2 class="end__claim">{site.claim}</h2>
-    <p class="end__text">
-      Hoy logística; mañana, cualquier industria.
-    </p>
+    <ol class="road" aria-label="Hoy logística; mañana, cualquier industria">
+      {
+        industrias.map((i) => (
+          <li class:list={['road__stop', { 'road__stop--now': 'hoy' in i }]}>
+            <span class="road__icon">
+              <Icon name={i.icon} />
+            </span>
+            <span>{i.nombre}</span>
+            <small>{'hoy' in i ? 'Hoy' : 'Mañana'}</small>
+          </li>
+        ))
+      }
+    </ol>
 
     <div class="end__actions">
       <button class="btn btn--ghost" type="button" data-action="print">
@@ -58,11 +76,59 @@ import { site } from '../../data/deck';
     max-width: 20ch;
   }
 
-  .end__text {
-    max-width: 58ch;
-    font-size: var(--step-1);
+  .road {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 7.5rem));
+    gap: clamp(0.75rem, 3vw, 2rem);
+    margin-top: 0.5rem;
+  }
+  /* Línea que une las industrias: de hoy hacia mañana. */
+  .road::before {
+    content: '';
+    position: absolute;
+    top: 1.75rem;
+    left: 12%;
+    right: 12%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--kiwi), var(--ink-3));
+  }
+  .road__stop {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-display);
+    font-weight: 500;
     color: var(--muted);
-    text-wrap: pretty;
+  }
+  .road__icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--ink-2);
+    border: 2px solid var(--ink-3);
+    color: var(--muted);
+  }
+  .road__stop small {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .road__stop--now {
+    color: var(--cream);
+  }
+  .road__stop--now .road__icon {
+    background: var(--deep);
+    border-color: var(--kiwi);
+    color: var(--kiwi);
+  }
+  .road__stop--now small {
+    color: var(--kiwi);
   }
 
   .end__actions {

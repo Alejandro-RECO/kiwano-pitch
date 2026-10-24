@@ -5,28 +5,28 @@ import Icon from '../Icon.astro';
 const capabilities = [
   {
     icon: 'scan-search',
-    title: 'Reconocimiento de patrones',
-    text: 'Aprende de los datos históricos.',
+    title: 'Aprende de tus datos',
   },
   {
     icon: 'sliders',
-    title: 'Reglas de negocio',
-    text: 'Decide con los criterios de cada empresa.',
+    title: 'Decide con tus reglas',
   },
   {
     icon: 'bot',
-    title: 'Agentes entrenables',
-    text: 'Mejora con cada caso nuevo.',
+    title: 'Mejora con cada caso',
   },
 ] as const;
 
-const uses = [
-  { title: 'Documentos', text: 'guías y facturas sin digitar' },
-  { title: 'Envíos', text: 'rutas recomendadas' },
-  { title: 'Excepciones', text: 'detecta retrasos y escala' },
-  { title: 'Clientes', text: '“¿dónde está mi pedido?”' },
-  { title: 'Conciliación', text: 'facturado contra entregado' },
-] as const;
+// Diagrama de flujo: lo que entra al agente y lo que sale, en un caso de logística.
+const HUB = { x: 250, y: 160, r: 64 };
+const entradas = ['Facturas', 'Guías de envío', 'WhatsApp'];
+const salidas = ['Datos al ERP', 'Alerta de retraso', 'Respuesta al cliente'];
+const filas = [60, 160, 260];
+const PILL_W = 146;
+const curva = (x1: number, y1: number, x2: number, y2: number) => {
+  const m = (x1 + x2) / 2;
+  return `M${x1},${y1} C${m},${y1} ${m},${y2} ${x2},${y2}`;
+};
 ---
 
 <Slide id="kiwano">
@@ -34,7 +34,7 @@ const uses = [
     <div>
       <h2 class="slide__title">La solución: Kiwano</h2>
       <p class="slide__lead">
-        Agentes de IA que asumen los procesos repetitivos de una pyme, con sus reglas y <strong class="hot">24/7</strong>.
+        Agentes de IA que trabajan <strong class="hot">24/7</strong> por tu pyme.
       </p>
 
       <ul class="slide__body caps">
@@ -44,58 +44,92 @@ const uses = [
               <span class="disc">
                 <Icon name={c.icon} />
               </span>
-              <div>
-                <h3>{c.title}</h3>
-                <p>{c.text}</p>
-              </div>
+              <h3>{c.title}</h3>
             </li>
           ))
         }
       </ul>
     </div>
 
-    <aside class="engine" aria-labelledby="engine-title">
-      <p class="engine__claim" id="engine-title">En logística, el agente asume:</p>
-      <ul class="engine__traits">
+    <figure class="flow">
+      <figcaption>Así trabaja un agente en logística</figcaption>
+      <svg viewBox="0 0 500 360" role="img" aria-labelledby="flow-desc">
+        <desc id="flow-desc">
+          Entran facturas, guías de envío y mensajes de WhatsApp al agente Kiwano. El agente entrega datos al ERP, alertas de
+          retraso y respuestas al cliente, con supervisión humana.
+        </desc>
         {
-          uses.map((u) => (
-            <li>
-              <span>
-                <strong>{u.title}:</strong> {u.text}
-              </span>
-            </li>
+          filas.map((fy) => (
+            <>
+              <path class="wire" d={curva(PILL_W, fy, HUB.x - HUB.r, HUB.y)} />
+              <path class="wire wire--live" d={curva(PILL_W, fy, HUB.x - HUB.r, HUB.y)} />
+              <path class="wire" d={curva(HUB.x + HUB.r, HUB.y, 500 - PILL_W, fy)} />
+              <path class="wire wire--live" d={curva(HUB.x + HUB.r, HUB.y, 500 - PILL_W, fy)} />
+            </>
           ))
         }
-      </ul>
-    </aside>
+        <line class="wire wire--human" x1={HUB.x} y1={HUB.y + HUB.r} x2={HUB.x} y2="290" />
+
+        {
+          entradas.map((t, i) => (
+            <g class="pill pill--in">
+              <rect x="0" y={filas[i] - 20} width={PILL_W} height="40" rx="20" />
+              <text x={PILL_W / 2} y={filas[i] + 5} text-anchor="middle">
+                {t}
+              </text>
+            </g>
+          ))
+        }
+        {
+          salidas.map((t, i) => (
+            <g class="pill pill--out">
+              <rect x={500 - PILL_W} y={filas[i] - 20} width={PILL_W} height="40" rx="20" />
+              <text x={500 - PILL_W / 2} y={filas[i] + 5} text-anchor="middle">
+                {t}
+              </text>
+            </g>
+          ))
+        }
+
+        <g class="hub">
+          <circle class="hub__halo" cx={HUB.x} cy={HUB.y} r={HUB.r + 10} />
+          <circle cx={HUB.x} cy={HUB.y} r={HUB.r} />
+          <text class="hub__name" x={HUB.x} y={HUB.y - 2} text-anchor="middle">Agente</text>
+          <text class="hub__name" x={HUB.x} y={HUB.y + 20} text-anchor="middle">Kiwano</text>
+        </g>
+
+        <g class="human">
+          <rect x={HUB.x - 85} y="290" width="170" height="40" rx="12" />
+          <text x={HUB.x} y="315" text-anchor="middle">Supervisión humana</text>
+        </g>
+
+        <text class="side" x={PILL_W / 2} y="330" text-anchor="middle">Entra</text>
+        <text class="side" x={500 - PILL_W / 2} y="330" text-anchor="middle">Sale</text>
+      </svg>
+    </figure>
   </div>
 </Slide>
 
 <style>
   .split {
     display: grid;
-    grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.9fr);
-    gap: clamp(1.5rem, 4vw, 4rem);
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 1.1fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
     align-items: center;
   }
-
   .hot {
     color: var(--kiwi);
     font-weight: 700;
-    
   }
-
   .caps {
     display: grid;
     gap: 1.25rem;
   }
-
   .cap {
     display: flex;
     gap: 1rem;
-    align-items: flex-start;
+    align-items: center;
   }
-
   .cap h3 {
     font-family: var(--font-display);
     font-weight: 600;
@@ -103,65 +137,108 @@ const uses = [
     line-height: 1.15;
     color: var(--title);
   }
-
-  .cap p {
-    margin-top: 0.25rem;
-    color: var(--muted);
-    max-width: 48ch;
-    text-wrap: pretty;
-  }
-
-  .engine {
-    background: var(--deep);
-    color: var(--cream);
-    border-radius: var(--radius-l);
-    padding: clamp(1.5rem, 3vw, 2.5rem);
+  .flow {
     display: grid;
-    gap: 1rem;
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kiwi) 30%, transparent);
+    gap: 0.75rem;
+    padding: clamp(1.25rem, 2.5vw, 2rem);
+    background: var(--surface);
+    border-radius: var(--radius-l);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kiwi) 25%, transparent);
   }
-
-  .engine__claim {
+  .flow figcaption {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: var(--step-3);
-    line-height: 1.1;
-    text-wrap: balance;
-  }
-
-  .engine__now {
-    font-size: var(--step--1);
-    color: color-mix(in srgb, var(--cream) 80%, var(--deep));
-    text-wrap: pretty;
-  }
-
-  .engine__traits {
-    display: grid;
-    gap: 0.55rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid color-mix(in srgb, var(--cream) 25%, transparent);
-  }
-
-  .engine__traits strong {
+    font-size: var(--step-2);
     color: var(--kiwi);
   }
-
-  .engine__traits li {
-    display: flex;
-    gap: 0.6rem;
-    align-items: baseline;
+  .flow svg {
+    width: 100%;
+    height: auto;
+    max-height: 58vh;
+    font-family: var(--font-body);
   }
-
-  .engine__traits li::before {
-    content: '';
-    flex: none;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--kiwi);
-    transform: translateY(-1px);
+  .wire {
+    fill: none;
+    stroke: var(--line);
+    stroke-width: 2;
   }
-
+  /* Pulso que recorre los cables: muestra el flujo de información. */
+  .wire--live {
+    stroke: var(--kiwi);
+    stroke-dasharray: 14 200;
+    animation: pulse 2.4s linear infinite;
+  }
+  .wire--human {
+    stroke: var(--brown);
+    stroke-dasharray: 4 5;
+  }
+  @keyframes pulse {
+    from {
+      stroke-dashoffset: 214;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wire--live {
+      animation: none;
+      stroke-dasharray: none;
+      opacity: 0.5;
+    }
+  }
+  .pill rect {
+    stroke-width: 1.5;
+  }
+  .pill--in rect {
+    fill: var(--bg);
+    stroke: var(--brown);
+  }
+  .pill--out rect {
+    fill: var(--deep);
+    stroke: var(--kiwi);
+  }
+  .pill text {
+    font-size: 14px;
+    font-weight: 700;
+    fill: var(--cream);
+  }
+  .hub circle {
+    fill: var(--deep);
+    stroke: var(--kiwi);
+    stroke-width: 3;
+  }
+  .hub .hub__halo {
+    fill: none;
+    stroke: color-mix(in srgb, var(--kiwi) 35%, transparent);
+    stroke-width: 1.5;
+  }
+  .hub__name {
+    font-family: var(--font-display);
+    font-size: 21px;
+    font-weight: 600;
+    fill: var(--cream);
+  }
+  .human rect {
+    fill: var(--brown);
+  }
+  .human text {
+    font-size: 14px;
+    font-weight: 700;
+    fill: var(--cream);
+  }
+  .side {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    fill: var(--muted);
+  }
+  @media print {
+    .wire--live {
+      display: none;
+    }
+  }
   @media (max-width: 900px) {
     .split {
       grid-template-columns: 1fr;
