@@ -29,10 +29,10 @@ const comparaciones = [
 ];
 
 const corto = (n: number) =>
-  n === 0 ? 'Gratis' : `$${(n / 1e6).toLocaleString('es-CO', { maximumFractionDigits: 1 })} M`;
+  n === 0 ? 'Gratis' : `$${(n / 1e6).toLocaleString('es-CO', { maximumFractionDigits: 2 })} M`;
 const detalles: Record<string, string> = {
   Diagnóstico: '30 min',
-  Piloto: '6 semanas',
+  MVP: '6 semanas',
   Agente: '1 agente',
   Operación: '3 agentes',
 };
@@ -46,7 +46,7 @@ const escalones = costos.precios.map((p) => ({
 
 <Slide id="oferta">
   <h2 class="slide__title">Producto y precio</h2>
-  <p class="slide__lead">Menos de la mitad del costo. Todo el día.</p>
+  <p class="slide__lead">Casi la mitad del costo. Todo el día.</p>
 
   <div class="slide__body split">
     <section aria-labelledby="prod-t">

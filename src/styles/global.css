@@ -582,3 +582,56 @@ a {
   }
 }
 
+
+/* ---------------------------------------------------------------------------
+   Animación de entrada: el contenido aparece escalonado al llegar a cada slide
+   y los gráficos se dibujan de izquierda a derecha. Solo con JS activo (.anim),
+   sin movimiento reducido y nunca al imprimir.
+--------------------------------------------------------------------------- */
+@media screen and (prefers-reduced-motion: no-preference) {
+  .anim .slide__inner > *,
+  .anim .slide__body > *,
+  .anim .slide__body li,
+  .anim .split > * > * {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.6s ease,
+      transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .anim .slide.is-active .slide__inner > *,
+  .anim .slide.is-active .slide__body > *,
+  .anim .slide.is-active .slide__body li,
+  .anim .slide.is-active .split > * > * {
+    opacity: 1;
+    transform: none;
+  }
+
+  .anim .slide.is-active .slide__inner > :nth-child(2),
+  .anim .slide.is-active .split > * > :nth-child(2),
+  .anim .slide.is-active li:nth-child(2) {
+    transition-delay: 0.12s;
+  }
+  .anim .slide.is-active .slide__inner > :nth-child(3),
+  .anim .slide.is-active .split > * > :nth-child(3),
+  .anim .slide.is-active li:nth-child(3) {
+    transition-delay: 0.24s;
+  }
+  .anim .slide.is-active .slide__inner > :nth-child(n + 4),
+  .anim .slide.is-active .split > * > :nth-child(n + 4),
+  .anim .slide.is-active li:nth-child(4) {
+    transition-delay: 0.36s;
+  }
+  .anim .slide.is-active li:nth-child(n + 5) {
+    transition-delay: 0.48s;
+  }
+
+  .anim figure svg {
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.35s;
+  }
+  .anim .slide.is-active figure svg {
+    clip-path: inset(0 0 0 0);
+  }
+}

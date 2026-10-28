@@ -9,7 +9,7 @@ const facets = [
   { icon: 'bot', title: 'Cauteloso con la IA' },
 ] as const;
 
-// Buyer persona ficticia que resume al cliente objetivo.
+// Buyer persona que resume al cliente objetivo.
 const persona = {
   nombre: 'Andrés Gómez',
   cargo: '38 años · Gerente de una distribuidora en Fontibón',
@@ -24,11 +24,10 @@ const persona = {
 
 <Slide id="cliente">
   <h2 class="slide__title">¿A quién le hablamos?</h2>
-  <p class="slide__lead">Gerentes de pymes logísticas en Bogotá.</p>
+  <p class="slide__lead">Gerentes de PyMes logísticas en Bogotá.</p>
 
   <div class="slide__body layout">
     <figure class="card">
-      <span class="card__tag">Persona ficticia</span>
       <svg class="avatar" viewBox="0 0 120 120" aria-hidden="true">
         <circle cx="60" cy="60" r="58" class="avatar__bg" />
         <path d="M18 112c4-24 22-36 42-36s38 12 42 36" class="avatar__body" />
@@ -73,7 +72,7 @@ const persona = {
   </div>
 
   <p class="takeaway">
-    Le vendemos un piloto de bajo riesgo, no innovación.
+    Le vendemos un MVP de bajo riesgo, no innovación.
   </p>
 </Slide>
 
@@ -95,16 +94,6 @@ const persona = {
     text-align: center;
     gap: 0.75rem;
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kiwi) 30%, transparent);
-  }
-  .card__tag {
-    position: absolute;
-    top: 0.9rem;
-    right: 0.9rem;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--kiwi);
   }
   .avatar {
     width: clamp(84px, 9vw, 112px);

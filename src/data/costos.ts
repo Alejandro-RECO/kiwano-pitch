@@ -40,5 +40,12 @@ export const precioAgente = planAgente.precio;
 export const cvAgente = variablePorCliente(precioAgente);
 export const margenAgente = precioAgente - cvAgente;
 
-/** Clientes del plan Agente necesarios para cubrir fijos y campaña de cada mes. */
-export const equilibrio = Math.ceil((totalFijos + totalCampana) / margenAgente);
+/** Costo unitario por cliente: I+D y operación del agente (IA, hosting, comisión, impuestos, pasarela). */
+export const costoUnitario = cvAgente;
+
+/** Gastos indirectos (publicidad y promoción): un porcentaje del costo de operación, ya sumado al precio. */
+export const totalIndirectos = totalFijos * data.gastosIndirectos.pct;
+export const costoMes = totalFijos + totalIndirectos;
+
+/** Clientes del plan Agente necesarios para cubrir la operación y los gastos indirectos de cada mes. */
+export const equilibrio = Math.ceil(costoMes / margenAgente);

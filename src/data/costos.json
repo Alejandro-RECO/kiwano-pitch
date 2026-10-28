@@ -133,23 +133,26 @@
       "incluye": "30 min en la empresa."
     },
     {
-      "plan": "Piloto",
-      "precio": 2500000,
+      "plan": "MVP",
+      "precio": 3250000,
       "unidad": "pago único",
-      "incluye": "Un proceso, 6 semanas."
+      "incluye": "Un proceso funcionando en 6 semanas.",
+      "precioBase": 2500000
     },
     {
       "plan": "Agente",
-      "precio": 1200000,
+      "precio": 1560000,
       "unidad": "al mes",
       "incluye": "Un agente en producción.",
-      "destacado": true
+      "destacado": true,
+      "precioBase": 1200000
     },
     {
       "plan": "Operación",
-      "precio": 3000000,
+      "precio": 3900000,
       "unidad": "al mes",
-      "incluye": "Hasta 3 agentes y tablero."
+      "incluye": "Hasta 3 agentes y tablero.",
+      "precioBase": 3000000
     }
   ],
   "referencia": {
@@ -169,5 +172,10 @@
         "usd": 25
       }
     ]
+  },
+  "gastosIndirectos": {
+    "pct": 0.3,
+    "concepto": "Gastos indirectos: publicidad y promoción (pauta, volantes, ruta comercial), el 30 % de la operación",
+    "nota": "Se suman al precio de cada plan."
   }
 }

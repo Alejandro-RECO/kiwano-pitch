@@ -70,7 +70,7 @@ export const site = {
   tagline: 'AI Agents & Tech Solutions',
   claim: 'Automatiza lo repetitivo. Decide con inteligencia.',
   description:
-    'Presentación estratégica de Kiwano: agentes de IA que convierten procesos repetitivos en decisiones automáticas para PYMES de logística, comercio y distribución en Bogotá.',
+    'Presentación estratégica de Kiwano: agentes de IA que convierten procesos repetitivos en decisiones automáticas para PyMes de logística, comercio y distribución en Bogotá.',
   /**
    * Correo para el llamado a la acción del cierre. Déjalo vacío y el botón
    * llevará a la fase de diagnóstico dentro de la misma presentación.

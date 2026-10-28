@@ -1,15 +1,33 @@
 ---
 import Slide from '../Slide.astro';
-import { costos, millones, totalFijos, totalCampana, precioAgente, margenAgente, equilibrio } from '../../data/costos';
+import {
+  costos,
+  millones,
+  totalFijos,
+  totalIndirectos,
+  costoMes,
+  precioAgente,
+  costoUnitario,
+  margenAgente,
+  equilibrio,
+} from '../../data/costos';
 
-const ahorro = Math.round((1 - precioAgente / costos.referencia.auxiliar) * 100);
 const margen = Math.round((margenAgente / precioAgente) * 100);
-const costoMes = totalFijos + totalCampana;
+const pctInd = Math.round(costos.gastosIndirectos.pct * 100);
+const m2 = (n: number) => `$${(n / 1e6).toLocaleString('es-CO', { maximumFractionDigits: 2 })} M`;
+const mil = (n: number) => `$${Math.round(n / 1000).toLocaleString('es-CO')} mil`;
 
-const cifras = [
-  { cifra: `−${ahorro} %`, texto: 'costo para la pyme' },
-  { cifra: `${margen} %`, texto: 'margen por cliente' },
-  { cifra: millones(costoMes), texto: 'costo de operar al mes' },
+/* Por cliente: precio − costo unitario = margen de ganancia. */
+const unidad = [
+  { k: 'Precio (incluye indirectos)', v: m2(precioAgente) },
+  { k: 'Costo unitario (I+D)', v: `− ${mil(costoUnitario)}` },
+  { k: 'Margen de ganancia', v: `${m2(margenAgente)} · ${margen} %`, hot: true },
+];
+/* Al mes: operación + gastos indirectos (publicidad). */
+const mes = [
+  { k: 'Operación', v: millones(totalFijos) },
+  { k: `Indirectos: publicidad (${pctInd} %)`, v: millones(totalIndirectos) },
+  { k: 'Costo total', v: millones(costoMes), hot: true },
 ];
 
 /*
@@ -41,16 +59,34 @@ const ganancia = `${x(cruce)},${y(costoMes)} ${x(X_MAX)},${y(ingreso(X_MAX))} ${
   <p class="slide__lead">Barato para el cliente, rentable para Kiwano.</p>
 
   <div class="slide__body split">
-    <ul class="figs">
-      {
-        cifras.map((c) => (
-          <li class="fig">
-            <span class="fig__num">{c.cifra}</span>
-            <p>{c.texto}</p>
-          </li>
-        ))
-      }
-    </ul>
+    <div class="figs">
+      <section class="fig">
+        <h3>Por cliente al mes</h3>
+        <dl>
+          {
+            unidad.map((r) => (
+              <div class:list={{ hot: r.hot }}>
+                <dt>{r.k}</dt>
+                <dd>{r.v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </section>
+      <section class="fig">
+        <h3>Costo de Kiwano al mes</h3>
+        <dl>
+          {
+            mes.map((r) => (
+              <div class:list={{ hot: r.hot }}>
+                <dt>{r.k}</dt>
+                <dd>{r.v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </section>
+    </div>
 
     <figure class="chart">
       <figcaption class="chart__title">
@@ -87,7 +123,7 @@ const ganancia = `${x(cruce)},${y(costoMes)} ${x(X_MAX)},${y(ingreso(X_MAX))} ${
         <text class="zone__label zone__label--gain" x={x(31)} y={y(costoMes + 2.2e6)} text-anchor="middle">Ganancia</text>
 
         <line class="cost" x1={L} x2={R} y1={y(costoMes)} y2={y(costoMes)} />
-        <text class="label" x={L + 8} y={y(costoMes) - 10}>Costo de operar: {millones(costoMes)}</text>
+        <text class="label" x={L + 8} y={y(costoMes) - 10}>Costo total: {millones(costoMes)}</text>
 
         <line class="income" x1={x(0)} y1={y(0)} x2={x(X_MAX)} y2={y(ingreso(X_MAX))} />
         <text class="label" x={x(X_MAX) - 4} y={y(ingreso(X_MAX)) - 10} text-anchor="end">Margen de los clientes</text>
@@ -120,22 +156,45 @@ const ganancia = `${x(cruce)},${y(costoMes)} ${x(X_MAX)},${y(ingreso(X_MAX))} ${
   }
   .fig {
     display: grid;
-    gap: 0.25rem;
+    gap: 0.5rem;
     padding: 0.9rem 1.1rem;
     background: var(--surface);
     border-radius: var(--radius-m);
     border-left: 3px solid var(--deep);
   }
-  .fig__num {
+  .fig h3 {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: var(--step-4);
-    line-height: 1;
-    color: var(--deep);
+    font-size: var(--step-1);
+    color: var(--title);
   }
-  .fig p {
+  .fig dl {
+    display: grid;
+    gap: 0.3rem;
+  }
+  .fig dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: var(--step--1);
+    font-variant-numeric: tabular-nums;
+  }
+  .fig dt {
     color: var(--muted);
-    text-wrap: pretty;
+  }
+  .fig dd {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .fig dl div.hot {
+    padding-top: 0.35rem;
+    border-top: 1px solid var(--line);
+    font-size: var(--step-0);
+  }
+  .fig dl div.hot dt,
+  .fig dl div.hot dd {
+    color: var(--deep);
+    font-weight: 800;
   }
   .chart {
     display: grid;

@@ -3,7 +3,7 @@ import Slide from '../Slide.astro';
 import Icon from '../Icon.astro';
 
 /*
- * Mapa de posicionamiento: precio para la pyme (x) contra qué tan a la medida
+ * Mapa de posicionamiento: precio para la PyMe (x) contra qué tan a la medida
  * del proceso es la solución (y). Ambos ejes van de 0 a 1; la ubicación es una
  * valoración cualitativa del equipo.
  */
@@ -28,7 +28,7 @@ const groups = [
   },
 ] as const;
 const kiwano = { px: 0.2, py: 0.76 };
-const ventajas = ['Implementación ágil', 'Precio accesible', 'Hecho para pymes'];
+const ventajas = ['Implementación ágil', 'Precio accesible', 'Hecho para PyMes'];
 
 const L = 40;
 const R = 500;
@@ -42,7 +42,7 @@ const midY = y(0.5);
 
 <Slide id="competencia">
   <h2 class="slide__title">Panorama competitivo</h2>
-  <p class="slide__lead">Nadie atiende a la pyme a su medida y a su precio.</p>
+  <p class="slide__lead">Nadie atiende a la PyMe a su medida y a su precio.</p>
 
   <div class="slide__body split">
     <figure class="map">

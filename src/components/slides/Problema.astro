@@ -57,21 +57,28 @@ const fmtM = (m: number) => `$${m.toLocaleString('es-CO', { maximumFractionDigit
 
 <Slide id="problema">
   <h2 class="slide__title">El problema</h2>
-  <p class="slide__lead">Las pymes pierden tiempo y dinero.</p>
+  <p class="slide__lead">Las PyMes pierden tiempo y dinero.</p>
 
   <div class="slide__body split">
-    <ul class="problems">
-      {
-        problems.map((p) => (
-          <li class="problem">
-            <span class="disc">
-              <Icon name={p.icon} />
-            </span>
-            <h3>{p.title}</h3>
-          </li>
-        ))
-      }
-    </ul>
+    <div class="left">
+      <ul class="problems">
+        {
+          problems.map((p) => (
+            <li class="problem">
+              <span class="disc">
+                <Icon name={p.icon} />
+              </span>
+              <h3>{p.title}</h3>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="errors">
+        <b>1 a 4 de cada 100</b> datos digitados a mano salen con error: una guía mal escrita, un pedido que no llega,
+        una factura que hay que rehacer.
+        <small>Referencia de la industria sobre digitación manual (Lido, ImageToTable, 2026).</small>
+      </p>
+    </div>
 
     <figure class="chart">
       <figcaption class="chart__title">Hoy, crecer significa contratar</figcaption>
@@ -128,6 +135,33 @@ const fmtM = (m: number) => `$${m.toLocaleString('es-CO', { maximumFractionDigit
 </Slide>
 
 <style>
+  .left {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .errors {
+    padding: 0.9rem 1.1rem;
+    border-left: 3px solid var(--brown);
+    background: var(--surface);
+    border-radius: 0 var(--radius-s) var(--radius-s) 0;
+    text-wrap: pretty;
+  }
+
+  .errors b {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-2);
+    color: var(--brown);
+  }
+
+  .errors small {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
   .split {
     display: grid;
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);

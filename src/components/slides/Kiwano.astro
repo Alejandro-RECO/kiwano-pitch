@@ -17,6 +17,13 @@ const capabilities = [
   },
 ] as const;
 
+/* Cargos cuyas decisiones repetitivas asume el agente (el equipo supervisa las excepciones). */
+const puestos = [
+  { puesto: 'Auxiliar de despacho', decision: 'Asigna vehículo y prioriza envíos' },
+  { puesto: 'Auxiliar de facturación', decision: 'Valida y concilia facturas' },
+  { puesto: 'Servicio al cliente', decision: 'Responde el estado del pedido' },
+] as const;
+
 // Diagrama de flujo: lo que entra al agente y lo que sale, en un caso de logística.
 const HUB = { x: 250, y: 160, r: 64 };
 const entradas = ['Facturas', 'Guías de envío', 'WhatsApp'];
@@ -34,7 +41,7 @@ const curva = (x1: number, y1: number, x2: number, y2: number) => {
     <div>
       <h2 class="slide__title">La solución: Kiwano</h2>
       <p class="slide__lead">
-        Agentes de IA que trabajan <strong class="hot">24/7</strong> por tu pyme.
+        Agentes de IA que trabajan <strong class="hot">24/7</strong> por tu PyMe.
       </p>
 
       <ul class="slide__body caps">
@@ -49,6 +56,20 @@ const curva = (x1: number, y1: number, x2: number, y2: number) => {
           ))
         }
       </ul>
+
+      <div class="roles">
+        <h3>Puestos que automatiza en la toma de decisiones</h3>
+        <ul>
+          {
+            puestos.map((r) => (
+              <li>
+                <b>{r.puesto}</b>
+                <span>{r.decision}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </div>
 
     <figure class="flow">
@@ -111,6 +132,41 @@ const curva = (x1: number, y1: number, x2: number, y2: number) => {
 </Slide>
 
 <style>
+  .roles {
+    margin-top: clamp(1rem, 3vh, 1.5rem);
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .roles h3 {
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+
+  .roles ul {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .roles li {
+    display: grid;
+    grid-template-columns: 11.5rem 1fr;
+    gap: 0.75rem;
+    font-size: var(--step--1);
+  }
+
+  .roles b {
+    color: var(--kiwi);
+  }
+
+  .roles span {
+    color: var(--muted);
+  }
+
   .split {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(320px, 1.1fr);

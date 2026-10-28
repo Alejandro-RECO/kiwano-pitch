@@ -33,6 +33,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     </main>
 
     <script>
+      document.documentElement.classList.add('anim');
       const slides = Array.from(document.querySelectorAll<HTMLElement>('.slide'));
       const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.rail__link'));
       const themed = Array.from(document.querySelectorAll<HTMLElement>('.rail, .controls'));
@@ -47,6 +48,8 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
         if (index === active) return;
         active = index;
         const slide = slides[index];
+        // Al entrar a una slide se reinicia su animación de entrada.
+        slides.forEach((s, i) => s.classList.toggle('is-active', i === index));
         links.forEach((link, i) => link.setAttribute('aria-current', i === index ? 'true' : 'false'));
         themed.forEach((el) => (el.dataset.theme = slide.dataset.theme));
         if (counter) counter.textContent = String(index + 1);
