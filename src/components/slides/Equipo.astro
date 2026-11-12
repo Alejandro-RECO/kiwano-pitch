@@ -1,0 +1,141 @@
+---
+import Slide from '../Slide.astro';
+import Icon from '../Icon.astro';
+import { site, equipo } from '../../data/deck';
+
+const iniciales = (nombre: string) =>
+  nombre
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((p) => p[0]?.toUpperCase() ?? '')
+    .join('');
+---
+
+<Slide id="equipo">
+  <h2 class="slide__title">Quiénes hacemos Kiwano</h2>
+  <p class="slide__lead">Un equipo fundador pequeño, que conoce el problema y sabe construir la solución.</p>
+
+  <ul class="slide__body team">
+    {
+      equipo.map((p) => (
+        <li class="member">
+          <span class="member__avatar" aria-hidden="true">
+            {iniciales(p.nombre)}
+          </span>
+          <div>
+            <h3>{p.nombre}</h3>
+            <p class="member__role">{p.rol}</p>
+            <p class="member__strength">{p.fortaleza}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="end">
+    <p class="end__claim">{site.claim}</p>
+    <p class="end__thanks">Gracias. ¿Preguntas?</p>
+    <button class="btn" type="button" data-action="print">
+      <Icon name="printer" size={16} />
+      Guardar como PDF
+    </button>
+  </div>
+</Slide>
+
+<style>
+  .slide__lead {
+    max-width: 52ch;
+  }
+  .team {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+    gap: clamp(0.9rem, 2vw, 1.5rem);
+  }
+  .member {
+    display: flex;
+    gap: 1.1rem;
+    align-items: center;
+    padding: clamp(1rem, 2vw, 1.5rem);
+    background: var(--surface);
+    border-radius: var(--radius-l);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kiwi) 25%, transparent);
+  }
+  .member__avatar {
+    flex: none;
+    width: clamp(3.75rem, 6vw, 5rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--deep);
+    border: 2px solid var(--kiwi);
+    color: var(--kiwi);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-3);
+  }
+  .member h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-3);
+    line-height: 1.1;
+    color: var(--cream);
+  }
+  .member__role {
+    font-weight: 700;
+    color: var(--kiwi);
+  }
+  .member__strength {
+    margin-top: 0.3rem;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+  .end {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.5rem;
+    margin-top: clamp(1.5rem, 5vh, 3rem);
+    padding-top: clamp(1rem, 3vh, 1.5rem);
+    border-top: 1px solid var(--line);
+  }
+  .end__claim {
+    flex: 1 1 22rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-4);
+    line-height: 1.1;
+    color: var(--title);
+    text-wrap: balance;
+  }
+  .end__thanks {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: var(--step-3);
+    color: var(--fg);
+  }
+  .btn {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: 999px;
+    border: 2px solid var(--brown);
+    background: transparent;
+    color: var(--fg);
+    font: inherit;
+    font-size: var(--step--1);
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn:hover {
+    background: var(--brown);
+    color: var(--cream);
+  }
+  @media print {
+    .btn {
+      display: none;
+    }
+  }
+</style>

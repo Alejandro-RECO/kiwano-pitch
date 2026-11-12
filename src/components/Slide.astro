@@ -27,6 +27,13 @@ const meta = slides[index];
     )
   }
   <div class="slide__inner">
+    {
+      !bare && (
+        <p class="slide__eyebrow">
+          {index + 1} · {meta.label}
+        </p>
+      )
+    }
     <slot />
   </div>
   {meta.transition && <p class="thread">{meta.transition}</p>}

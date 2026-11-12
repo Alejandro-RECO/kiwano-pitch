@@ -1,13 +1,14 @@
 /**
- * Orden narrativo del deck. Cada slide sabe su tema (oscuro para abrir y cerrar,
- * crema para contenido denso) y la frase que la conecta con la siguiente:
- * problema → solución → cliente → competencia → precio → viabilidad → cierre.
+ * Orden narrativo del deck: las 8 secciones del elevator pitch, en 5 minutos.
+ * problema → solución → cliente → propuesta de valor → competencia →
+ * modelo de negocio → tracción → equipo.
+ * Cada slide sabe su tema (oscuro o crema) y la frase que la conecta con la siguiente.
  */
 export type SlideTheme = 'dark' | 'light';
 
 export interface SlideMeta {
   id: string;
-  /** Nombre corto para el riel de navegación. */
+  /** Nombre de la sección: se muestra en el riel y en la etiqueta numerada de la slide. */
   label: string;
   theme: SlideTheme;
   /** Frase de transición hacia la siguiente slide. Vacía en la última. */
@@ -16,50 +17,50 @@ export interface SlideMeta {
 
 export const slides: SlideMeta[] = [
   {
-    id: 'inicio',
-    label: 'Portada',
-    theme: 'dark',
-    transition: 'Todo empieza con un costo que las empresas asumen como normal.',
-  },
-  {
     id: 'problema',
-    label: 'La problemática',
+    label: 'Problema',
     theme: 'light',
     transition: 'Ese costo tiene solución, y no exige un equipo técnico.',
   },
   {
     id: 'kiwano',
-    label: 'La solución',
+    label: 'Solución',
     theme: 'dark',
     transition: '¿Para quién es?',
   },
   {
     id: 'cliente',
-    label: 'Cliente objetivo',
+    label: 'Cliente',
     theme: 'light',
-    transition: '¿Y por qué Kiwano y no otro?',
+    transition: '¿Qué gana con Kiwano?',
+  },
+  {
+    id: 'valor',
+    label: 'Propuesta de valor',
+    theme: 'dark',
+    transition: '¿Y quién más lo ofrece?',
   },
   {
     id: 'competencia',
-    label: 'Panorama competitivo',
+    label: 'Competencia',
     theme: 'light',
-    transition: '¿Cuánto cuesta?',
+    transition: '¿Cómo ganamos dinero?',
   },
   {
-    id: 'oferta',
-    label: 'Producto y precio',
+    id: 'modelo',
+    label: 'Modelo de negocio',
     theme: 'dark',
-    transition: '¿Y es un negocio viable?',
+    transition: '¿Qué tan cerca estamos?',
   },
   {
-    id: 'numeros',
-    label: 'Viabilidad',
+    id: 'traccion',
+    label: 'Tracción',
     theme: 'light',
-    transition: 'Para cerrar.',
+    transition: '¿Quiénes lo hacemos?',
   },
   {
-    id: 'cierre',
-    label: 'Cierre',
+    id: 'equipo',
+    label: 'Equipo',
     theme: 'dark',
     transition: '',
   },
@@ -70,10 +71,44 @@ export const site = {
   tagline: 'AI Agents & Tech Solutions',
   claim: 'Automatiza lo repetitivo. Decide con inteligencia.',
   description:
-    'Presentación estratégica de Kiwano: agentes de IA que convierten procesos repetitivos en decisiones automáticas para PyMes de logística, comercio y distribución en Bogotá.',
-  /**
-   * Correo para el llamado a la acción del cierre. Déjalo vacío y el botón
-   * llevará a la fase de diagnóstico dentro de la misma presentación.
-   */
-  contactEmail: '',
+    'Elevator pitch de Kiwano: agentes de IA que convierten procesos repetitivos en decisiones automáticas para PyMes de logística, comercio y distribución en Bogotá.',
 };
+
+/** Tamaño de mercado (slide «Modelo de negocio»). */
+export const mercado = {
+  cifra: '+12.000',
+  texto: 'empresas de logística y transporte activas en Bogotá-Región',
+  /** Total exacto que reporta la fuente; sirve para calcular la participación de la meta. */
+  total: 12377,
+  fuente: 'Cámara de Comercio de Bogotá, Radar de eficiencia y competitividad logística (Registro Mercantil, 2025)',
+};
+
+/** Meta de clientes del primer año (objetivo del equipo). */
+export const metaClientes = 40;
+
+/**
+ * Tracción (slide 7). `pruebas` son evidencias reales de interés: entrevistas,
+ * encuestas, empresas que pidieron el diagnóstico, cartas de intención.
+ * Déjala vacía si aún no hay; cada fila que agregues aparece como una cifra grande.
+ * Ejemplo: { cifra: '8', texto: 'gerentes entrevistados' }
+ */
+export const traccion: { pruebas: { cifra: string; texto: string }[] } = {
+  pruebas: [],
+};
+
+/**
+ * Equipo (slide 8). Reemplaza los textos de ejemplo por los datos reales:
+ * nombre, rol en Kiwano y la experiencia o fortaleza que aporta cada uno.
+ */
+export const equipo = [
+  {
+    nombre: 'Nombre Apellido',
+    rol: 'Rol en Kiwano',
+    fortaleza: 'Experiencia y fortaleza principal.',
+  },
+  {
+    nombre: 'Nombre Apellido',
+    rol: 'Rol en Kiwano',
+    fortaleza: 'Experiencia y fortaleza principal.',
+  },
+];

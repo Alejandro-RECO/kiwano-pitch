@@ -1,7 +1,11 @@
 ---
 import Slide from '../Slide.astro';
 import Icon from '../Icon.astro';
+import { Image } from 'astro:assets';
+import logo from '../../assets/kiwano-logo.png';
+import { site } from '../../data/deck';
 
+/* Lo innovador del producto: el agente se entrena con la empresa, no al revés. */
 const capabilities = [
   {
     icon: 'scan-search',
@@ -39,19 +43,26 @@ const curva = (x1: number, y1: number, x2: number, y2: number) => {
 <Slide id="kiwano">
   <div class="split">
     <div>
-      <h2 class="slide__title">La solución: Kiwano</h2>
+      <h2 class="brand">
+        <Image
+          src={logo}
+          alt={`${site.name}, ${site.tagline}`}
+          widths={[360, 600, 900]}
+          sizes="(max-width: 767px) 70vw, 340px"
+          loading="lazy"
+        />
+      </h2>
+      <p class="claim">{site.claim}</p>
       <p class="slide__lead">
         Agentes de IA que trabajan <strong class="hot">24/7</strong> por tu PyMe.
       </p>
 
-      <ul class="slide__body caps">
+      <ul class="caps">
         {
           capabilities.map((c) => (
             <li class="cap">
-              <span class="disc">
-                <Icon name={c.icon} />
-              </span>
-              <h3>{c.title}</h3>
+              <Icon name={c.icon} size={20} />
+              {c.title}
             </li>
           ))
         }
@@ -177,21 +188,43 @@ const curva = (x1: number, y1: number, x2: number, y2: number) => {
     color: var(--kiwi);
     font-weight: 700;
   }
-  .caps {
-    display: grid;
-    gap: 1.25rem;
+  .brand {
+    width: clamp(220px, 26vw, 340px);
   }
-  .cap {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+  .brand img {
+    width: 100%;
+    height: auto;
   }
-  .cap h3 {
+  .claim {
+    margin-top: 0.75rem;
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: var(--step-2);
+    font-size: var(--step-3);
     line-height: 1.15;
     color: var(--title);
+    text-wrap: balance;
+  }
+  .caps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: clamp(1rem, 3vh, 1.5rem);
+  }
+  .cap {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    background: var(--deep);
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: var(--step-0);
+  }
+  .cap :global(svg) {
+    flex: none;
+    color: var(--kiwi);
   }
   .flow {
     display: grid;

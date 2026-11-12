@@ -1,0 +1,234 @@
+---
+import Slide from '../Slide.astro';
+import { costos, millones, precioAgente, costoUnitario, margenAgente, costoMes, equilibrio } from '../../data/costos';
+import { mercado, metaClientes } from '../../data/deck';
+
+const m2 = (n: number) => `$${(n / 1e6).toLocaleString('es-CO', { maximumFractionDigits: 2 })} M`;
+const mil = (n: number) => `$${Math.round(n / 1000).toLocaleString('es-CO')} mil`;
+const margenPct = Math.round((margenAgente / precioAgente) * 100);
+const cuota = ((metaClientes / mercado.total) * 100).toLocaleString('es-CO', { maximumFractionDigits: 1 });
+const utilidadMeta = metaClientes * margenAgente - costoMes;
+
+/* Lo que pide el pitch: tamaño de mercado, precio y margen de ganancia. */
+const cifras = [
+  {
+    etiqueta: 'Mercado',
+    cifra: mercado.cifra,
+    texto: mercado.texto,
+    nota: `Meta del año 1: ${metaClientes} clientes, el ${cuota} % del mercado.`,
+  },
+  {
+    etiqueta: 'Precio',
+    cifra: `${m2(precioAgente)}/mes`,
+    texto: 'por agente, en suscripción mensual',
+    nota: 'Ingreso recurrente: el cliente paga cada mes.',
+  },
+  {
+    etiqueta: 'Margen',
+    cifra: `${margenPct} %`,
+    texto: `${m2(margenAgente)} de ganancia por cliente al mes`,
+    nota: `Atender a cada cliente cuesta ${mil(costoUnitario)}.`,
+  },
+];
+
+const corto = (n: number) => (n === 0 ? 'Gratis' : m2(n));
+const detalles: Record<string, string> = {
+  Diagnóstico: '30 min',
+  MVP: '6 semanas',
+  Agente: '1 agente',
+  Operación: '3 agentes',
+};
+const escalones = costos.precios.map((p) => ({
+  plan: p.plan,
+  precio: `${corto(p.precio)}${p.unidad === 'al mes' ? '/mes' : ''}`,
+  detalle: detalles[p.plan] ?? '',
+  hot: 'destacado' in p,
+}));
+---
+
+<Slide id="modelo">
+  <h2 class="slide__title">Suscripción mensual por agente</h2>
+  <p class="slide__lead">Un mercado grande, un precio accesible y un margen alto.</p>
+
+  <div class="slide__body split">
+    <ul class="kpis">
+      {
+        cifras.map((c) => (
+          <li class="kpi">
+            <span class="kpi__tag">{c.etiqueta}</span>
+            <div>
+              <p class="kpi__fig">
+                <b>{c.cifra}</b> {c.texto}
+              </p>
+              <p class="kpi__note">{c.nota}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <section class="entry" aria-labelledby="entry-t">
+      <h3 id="entry-t">El cliente entra paso a paso</h3>
+      <ol class="ladder">
+        {
+          escalones.map((e, i) => (
+            <li class:list={['step', { 'step--hot': e.hot }]} style={`--h: ${46 + i * 18}%`}>
+              <span class="step__price">{e.precio}</span>
+              <span class="step__bar">
+                <span class="step__num">{i + 1}</span>
+                <b>{e.plan}</b>
+                <small>{e.detalle}</small>
+              </span>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="entry__note">
+        Con <b>{equilibrio} clientes</b> cubrimos los costos; con {metaClientes}, quedan {millones(utilidadMeta)} de utilidad al
+        mes.
+      </p>
+    </section>
+  </div>
+
+  <p class="source">Mercado: {mercado.fuente}.</p>
+</Slide>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+  .kpis {
+    display: grid;
+    gap: clamp(0.75rem, 2vh, 1.1rem);
+  }
+  .kpi {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: center;
+    padding: clamp(0.8rem, 2vh, 1.1rem) 1.1rem;
+    background: var(--surface);
+    border-radius: var(--radius-m);
+    border-left: 3px solid var(--kiwi);
+  }
+  .kpi__tag {
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--kiwi);
+  }
+  .kpi__fig {
+    line-height: 1.3;
+    text-wrap: pretty;
+  }
+  .kpi__fig b {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-4);
+    line-height: 1.05;
+    color: var(--cream);
+  }
+  .kpi__note {
+    margin-top: 0.2rem;
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+  .entry {
+    display: grid;
+    gap: 0.9rem;
+  }
+  .entry h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-2);
+    color: var(--title);
+  }
+  .ladder {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: end;
+    gap: 0.6rem;
+    height: clamp(190px, 34vh, 300px);
+  }
+  .step {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.4rem;
+    height: 100%;
+  }
+  .step__price {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-1);
+    line-height: 1;
+    text-align: center;
+    color: var(--fg);
+  }
+  .step__bar {
+    display: grid;
+    align-content: start;
+    justify-items: center;
+    gap: 0.15rem;
+    height: var(--h);
+    padding: 0.6rem 0.4rem;
+    border-radius: var(--radius-m) var(--radius-m) 4px 4px;
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    text-align: center;
+  }
+  .step--hot .step__bar {
+    background: var(--deep);
+    border-color: var(--kiwi);
+  }
+  .step--hot .step__price {
+    color: var(--kiwi);
+  }
+  .step__num {
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--brown);
+    color: var(--cream);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step--1);
+  }
+  .step b {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-0);
+    color: var(--title);
+  }
+  .step--hot b {
+    color: var(--cream);
+  }
+  .step small {
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+  .entry__note {
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+  .entry__note b {
+    color: var(--kiwi);
+  }
+  .source {
+    margin-top: clamp(0.75rem, 2vh, 1.25rem);
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  @media (max-width: 900px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

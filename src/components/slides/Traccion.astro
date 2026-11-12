@@ -1,0 +1,222 @@
+---
+import Slide from '../Slide.astro';
+import nodos from '../../data/nodos.json' with { type: 'json' };
+import { millones, margenAgente, costoMes, equilibrio } from '../../data/costos';
+import { traccion, metaClientes } from '../../data/deck';
+
+/*
+ * Tracción en etapa temprana: aún no hay ventas, así que se muestra lo que sí
+ * existe (empresas reales ya identificadas en la ruta comercial) y el camino
+ * hasta la meta. Las evidencias de interés se agregan en `traccion.pruebas`.
+ */
+const prospectos = nodos.filter((n) => n.tipo === 'cliente');
+const porZona = prospectos.reduce<Record<string, number>>((acc, n) => {
+  const zona = n.localidad.split(' – ')[0];
+  acc[zona] = (acc[zona] ?? 0) + 1;
+  return acc;
+}, {});
+const zonas = Object.entries(porZona).sort((a, b) => b[1] - a[1]);
+const principales = zonas.slice(0, 2);
+const otras = zonas.slice(2).reduce((a, [, n]) => a + n, 0);
+
+const utilidadMeta = metaClientes * margenAgente - costoMes;
+
+const hitos = [
+  { titulo: 'Hoy', texto: `${prospectos.length} empresas en la ruta comercial`, hot: true },
+  { titulo: 'Diagnóstico gratis', texto: '30 minutos en cada empresa' },
+  { titulo: 'MVP de 6 semanas', texto: 'Primeros clientes que pagan' },
+  { titulo: `${equilibrio} clientes`, texto: 'Punto de equilibrio' },
+  { titulo: `${metaClientes} clientes`, texto: `Meta del año 1: ${millones(utilidadMeta)} de utilidad al mes` },
+];
+---
+
+<Slide id="traccion">
+  <h2 class="slide__title">De {prospectos.length} prospectos a {metaClientes} clientes</h2>
+  <p class="slide__lead">Etapa temprana: empresas reales identificadas y una ruta comercial lista.</p>
+
+  <div class="slide__body split">
+    <div class="now">
+      <figure class="card">
+        <b class="card__fig">{prospectos.length}</b>
+        <figcaption>PyMes logísticas de Bogotá ya identificadas y en nuestra ruta de visitas</figcaption>
+        <ul class="zones">
+          {
+            principales.map(([zona, n]) => (
+              <li>
+                {zona} <b>{n}</b>
+              </li>
+            ))
+          }
+          {
+            otras > 0 && (
+              <li>
+                Otras zonas <b>{otras}</b>
+              </li>
+            )
+          }
+        </ul>
+      </figure>
+
+      {
+        traccion.pruebas.length > 0 && (
+          <ul class="proofs">
+            {traccion.pruebas.map((p) => (
+              <li>
+                <b>{p.cifra}</b>
+                <span>{p.texto}</span>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+
+    <ol class="path" aria-label="Camino hasta la meta del primer año">
+      {
+        hitos.map((h, i) => (
+          <li class:list={['hito', { 'hito--now': 'hot' in h }]}>
+            <span class="hito__num">{i + 1}</span>
+            <div>
+              <h3>{h.titulo}</h3>
+              <p>{h.texto}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</Slide>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+  .now {
+    display: grid;
+    gap: 1rem;
+  }
+  .card {
+    display: grid;
+    gap: 0.6rem;
+    padding: clamp(1.25rem, 2.5vw, 2rem);
+    background: var(--deep);
+    color: var(--cream);
+    border-radius: var(--radius-l);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kiwi) 30%, transparent);
+  }
+  .card__fig {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(3.5rem, 2rem + 5vw, 6rem);
+    line-height: 0.9;
+    color: var(--kiwi);
+  }
+  .card figcaption {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: var(--step-2);
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+  .zones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.4rem;
+  }
+  .zones li {
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    border: 1.5px solid color-mix(in srgb, var(--cream) 30%, transparent);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+  .zones b {
+    color: var(--kiwi);
+  }
+  .proofs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: 0.75rem;
+  }
+  .proofs li {
+    display: grid;
+    gap: 0.1rem;
+    padding: 0.8rem 1rem;
+    background: var(--surface);
+    border-radius: var(--radius-m);
+    border-left: 3px solid var(--deep);
+  }
+  .proofs b {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-4);
+    line-height: 1;
+    color: var(--deep);
+  }
+  .proofs span {
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+  .path {
+    position: relative;
+    display: grid;
+    gap: clamp(0.6rem, 2vh, 1.1rem);
+  }
+  /* Línea que une los hitos: de hoy hacia la meta. */
+  .path::before {
+    content: '';
+    position: absolute;
+    left: 1.2rem;
+    top: 1.2rem;
+    bottom: 1.2rem;
+    width: 2px;
+    transform: translateX(-50%);
+    background: linear-gradient(var(--deep), var(--cream-3));
+  }
+  .hito {
+    position: relative;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .hito__num {
+    flex: none;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--surface);
+    border: 2px solid var(--brown);
+    color: var(--brown);
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+  .hito--now .hito__num {
+    background: var(--deep);
+    border-color: var(--deep);
+    color: var(--cream);
+  }
+  .hito h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-2);
+    line-height: 1.15;
+    color: var(--title);
+  }
+  .hito--now h3 {
+    color: var(--deep);
+  }
+  .hito p {
+    color: var(--muted);
+  }
+  @media (max-width: 900px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

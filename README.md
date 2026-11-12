@@ -1,6 +1,6 @@
 # Kiwano — presentación estratégica
 
-Pitch deck web de **Kiwano (AI Agents & Tech Solutions)**: una presentación de 15 slides para la clase de Emprendimiento II construida con [Astro](https://astro.build) y publicada en GitHub Pages.
+Pitch deck web de **Kiwano (AI Agents & Tech Solutions)**: un elevator pitch de 8 slides para la clase de Emprendimiento II construida con [Astro](https://astro.build) y publicada en GitHub Pages.
 
 **Sitio publicado:** https://alejandro-reco.github.io/kiwano-pitch/
 
@@ -12,34 +12,29 @@ Pitch deck web de **Kiwano (AI Agents & Tech Solutions)**: una presentación de 
 | Ir al inicio / final | Inicio / Fin |
 | Pantalla completa | Tecla `F` o botón **Presentar** |
 | Saltar a una slide | Clic en un punto del riel izquierdo |
-| Guardar como PDF | Botón **Guardar como PDF** en el cierre (una slide por página, 16:9) |
+| Guardar como PDF | Botón **Guardar como PDF** en la última slide (una slide por página, 16:9) |
 
 En móvil se navega con scroll; la barra superior y el contador muestran el avance.
 
 ## Estructura narrativa
 
-1. Portada
-2. La problemática
-3. La solución (Kiwano + casos en logística)
-4. Panorama competitivo
-5. Fundamentación: el valor que entregamos
-6. Producto y precio (4P)
-7. Plaza y promoción (4P)
-8. Red de nodos: 20 empresas reales en Bogotá sobre el mapa (gráfico generado con Claude + prompt)
-9. Ruta de visitas: distancias y ventanas de tiempo de cada cliente
-10. P-medianas: dónde ubicar el punto de atención
-11. Modelo de transporte (Vogel): qué proveedor de IA atiende a cada cliente
-12. Estrategia de relación con clientes, proveedores y competencia
-13. Costos fijos y variables, margen y punto de equilibrio
-14. ¿Cómo se implementa?
-15. Cierre
+Sigue las 8 secciones del elevator pitch, para presentar en 5 minutos (guion con tiempos en [`informe/guion.md`](informe/guion.md)):
 
-Cada slide termina con una **frase de transición** hacia la siguiente. Esas frases, el orden y el tema (oscuro o crema) de cada slide viven en [`src/data/deck.ts`](src/data/deck.ts).
+1. Problema
+2. Solución (logo, eslogan y cómo trabaja un agente)
+3. Cliente
+4. Propuesta de valor
+5. Competencia
+6. Modelo de negocio (mercado, precio y margen)
+7. Tracción
+8. Equipo y cierre
+
+Cada slide termina con una **frase de transición** hacia la siguiente. Esas frases, el orden y el tema (oscuro o crema) de cada slide viven en [`src/data/deck.ts`](src/data/deck.ts). Las slides de versiones anteriores (red de nodos, costos, DOFA, etc.) siguen en [`src/components/slides/`](src/components/slides/) pero no se muestran.
 
 ## Editar el contenido
 
 - Textos de cada slide: [`src/components/slides/`](src/components/slides/) (un archivo por slide).
-- Orden, frases de transición y datos generales: [`src/data/deck.ts`](src/data/deck.ts). Ahí también está `contactEmail`: si lo llenas, el botón del cierre abre un correo; vacío, lleva a la fase de diagnóstico.
+- Orden, frases de transición y datos generales: [`src/data/deck.ts`](src/data/deck.ts). Ahí también están los integrantes del equipo (`equipo`), las evidencias de tracción (`traccion.pruebas`) y el tamaño de mercado (`mercado`).
 - Logo: [`src/assets/kiwano-logo.png`](src/assets/kiwano-logo.png) (Astro lo optimiza a WebP en el build).
 - Colores, tipografías y ritmo: [`src/styles/global.css`](src/styles/global.css).
 
